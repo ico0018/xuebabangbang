@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #fbfcfd;
+  --background: #fffdf7;
   --foreground: #20313b;
 }
 
@@ -25,6 +25,10 @@ body {
 button,
 input {
   font: inherit;
+}
+
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
