@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #fffdf7;
-  --foreground: #20313b;
+  --background: #f6f4ee;
+  --foreground: #171717;
 }
 
 * {
@@ -20,6 +20,11 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-underline-offset: 4px;
 }
 
 button,
@@ -27,11 +32,7 @@ input {
   font: inherit;
 }
 
-a {
-  -webkit-tap-highlight-color: transparent;
-}
-
 ::selection {
-  background: #fce8a0;
-  color: #20313b;
+  background: #f2c84b;
+  color: #171717;
 }
