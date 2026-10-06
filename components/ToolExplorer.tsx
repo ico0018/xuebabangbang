@@ -51,7 +51,7 @@ export function ToolExplorer() {
               className={
                 category === item.id
                   ? "min-h-10 rounded-full bg-[#1d1d1b] px-4 text-sm font-bold text-[#f8f2e8]"
-                  : "min-h-10 rounded-full border border-black/15 bg-transparent px-4 text-sm font-bold text-black/50 transition hover:border-black/35 hover:text-black"
+                  : "min-h-10 rounded-full border border-black/10 bg-transparent px-4 text-sm font-bold text-black/50 transition hover:border-black/40 hover:text-black"
               }
             >
               {item.label}
@@ -66,7 +66,7 @@ export function ToolExplorer() {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="搜一下……"
-            className="w-full rounded-2xl border border-black/15 bg-white/45 px-4 py-3 text-sm text-[#1d1d1b] outline-none placeholder:text-black/30 focus:border-[#b84d36] focus:ring-4 focus:ring-[#b84d36]/10"
+            className="w-full rounded-2xl border border-black/10 bg-white/50 px-4 py-3 text-sm text-[#1d1d1b] outline-none placeholder:text-black/30 focus:border-[#b84d36] focus:ring-4 focus:ring-[#b84d36]/10"
           />
         </div>
       </div>
