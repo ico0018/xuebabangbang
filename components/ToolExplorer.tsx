@@ -6,7 +6,11 @@ import { tools, type ToolCategory } from "../data/tools";
 import { ToolGrid } from "./ToolGrid";
 
 const categories: { id: "all" | ToolCategory; label: string }[] = [
-  { id: "all", label: "全部" }, { id: "chinese", label: "语文" }, { id: "math", label: "数学" }, { id: "english", label: "英语" }, { id: "general", label: "通用" },
+  { id: "all", label: "全部" },
+  { id: "chinese", label: "语文" },
+  { id: "math", label: "数学" },
+  { id: "english", label: "英语" },
+  { id: "general", label: "学习管理" },
 ];
 
 function isCategory(value: string | null): value is ToolCategory {
@@ -29,6 +33,7 @@ export function ToolExplorer() {
 
   const matchingTools = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
+
     return tools.filter((tool) => {
       const matchesCategory = category === "all" || tool.category === category;
       const searchableText = [tool.name, tool.description, tool.categoryLabel, ...tool.tags].join(" ").toLocaleLowerCase();
@@ -38,12 +43,39 @@ export function ToolExplorer() {
 
   return (
     <div>
-      <label htmlFor="tool-search" className="sr-only">搜索工具</label>
-      <input id="tool-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索工具……" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-ink outline-none placeholder:text-slate-400 focus:border-sky focus:ring-4 focus:ring-sky/15" />
-      <div className="mt-5 flex flex-wrap gap-2" aria-label="工具分类">
-        {categories.map((item) => <button key={item.id} type="button" onClick={() => setCategory(item.id)} className={category === item.id ? "min-h-10 rounded-full bg-sky px-4 text-sm font-semibold text-white" : "min-h-10 rounded-full border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 transition-colors hover:border-sky hover:text-sky"}>{item.label}</button>)}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-2" aria-label="工具分类">
+          {categories.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setCategory(item.id)}
+              className={
+                category === item.id
+                  ? "min-h-10 rounded-full bg-[#1d1d1b] px-4 text-sm font-bold text-[#f8f2e8]"
+                  : "min-h-10 rounded-full border border-black/15 bg-transparent px-4 text-sm font-bold text-black/50 transition hover:border-black/35 hover:text-black"
+              }
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="w-full sm:max-w-xs">
+          <label htmlFor="tool-search" className="sr-only">搜索工具</label>
+          <input
+            id="tool-search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="搜一下……"
+            className="w-full rounded-2xl border border-black/15 bg-white/45 px-4 py-3 text-sm text-[#1d1d1b] outline-none placeholder:text-black/30 focus:border-[#b84d36] focus:ring-4 focus:ring-[#b84d36]/10"
+          />
+        </div>
       </div>
-      <div className="mt-8"><ToolGrid tools={matchingTools} /></div>
+
+      <div className="mt-8">
+        <ToolGrid tools={matchingTools} />
+      </div>
     </div>
   );
 }
