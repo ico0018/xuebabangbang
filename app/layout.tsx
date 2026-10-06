@@ -4,8 +4,8 @@ import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 
 export const metadata: Metadata = {
-  title: "学霸帮帮 - 实用的小学生学习工具箱",
-  description: "学霸帮帮为孩子和家长提供简单、免费、实用的语文、数学和英语学习小工具。",
+  title: "学霸帮帮｜古文、汉字与学习计划小工具",
+  description: "给孩子和家长准备的实用学习小工具：古文乐园、汉字花园和学习计划器。打开就用，把眼前这一小步先做好。",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

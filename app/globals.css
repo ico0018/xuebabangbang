@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #f6f4ee;
-  --foreground: #171717;
+  --background: #f5f1e8;
+  --foreground: #1d1d1b;
 }
 
 * {
@@ -19,11 +19,14 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 a {
+  color: inherit;
+  text-decoration: none;
   text-underline-offset: 4px;
 }
 
@@ -33,6 +36,20 @@ input {
 }
 
 ::selection {
-  background: #f2c84b;
-  color: #171717;
+  background: #f0c66e;
+  color: #1d1d1b;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
