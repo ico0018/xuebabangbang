@@ -15,7 +15,7 @@ export default function ToolsPage() {
           <p className="text-xs font-black tracking-[0.18em] text-[#b84d36]">工具箱</p>
           <h1 className="mt-3 text-4xl font-black tracking-[-0.045em] text-[#1d1d1b] sm:text-5xl">工具不多，够用就行。</h1>
         </div>
-        <p className="max-w-xl text-base leading-7 text-black/55">
+        <p className="max-w-xl text-base leading-7 text-black/60">
           现在先把古文、汉字和学习计划这三件事做好。以后真的遇到新的学习麻烦，再往这里加。
         </p>
       </div>
