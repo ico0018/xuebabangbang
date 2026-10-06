@@ -156,7 +156,7 @@ export default function HomePage() {
             <p className="text-xs font-black tracking-[0.18em] text-white/40">为什么做这个站</p>
             <h2 className="mt-4 text-3xl font-black leading-tight tracking-[-0.04em] sm:text-4xl">是在陪孩子写作业的时候，慢慢长出来的。</h2>
           </div>
-          <div className="max-w-2xl text-base leading-8 text-white/68 sm:text-lg">
+          <div className="max-w-2xl text-base leading-8 text-white/70 sm:text-lg">
             <p>一个字写错了二十遍，第二天还是错。一句古诗会背，落到纸上却空了一格。每天提醒“快点、下一项”，大人和孩子都累。</p>
             <p className="mt-5">于是就把这些重复的小麻烦，一个个做成小工具。能让孩子自己多看懂一步，让家长少喊一句，就算有用。</p>
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-black text-[#f0c66e]">
@@ -170,7 +170,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-18 lg:px-10">
+      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-16 lg:px-10">
         <div className="flex flex-col gap-4 border-b border-black/15 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-black text-[#b84d36]">学霸帮帮</p>
