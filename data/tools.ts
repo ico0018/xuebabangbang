@@ -51,7 +51,7 @@ export const tools: Tool[] = [
     icon: "✓",
     tags: ["计划", "计时", "检查", "复盘"],
     status: "online",
-    href: "https://flow.xuebabangbang.cn",
+    href: "https://taskhelper.xuebabangbang.cn",
     external: true,
     featured: true,
   },
