@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ToolsPage() {
   return (
     <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-10">
-      <div className="grid gap-7 border-b border-black/15 pb-8 lg:grid-cols-[1fr_.7fr] lg:items-end">
+      <div className="grid gap-7 border-b border-black/10 pb-8 lg:grid-cols-[1fr_.7fr] lg:items-end">
         <div>
           <p className="text-xs font-black tracking-[0.18em] text-[#b84d36]">工具箱</p>
           <h1 className="mt-3 text-4xl font-black tracking-[-0.045em] text-[#1d1d1b] sm:text-5xl">工具不多，够用就行。</h1>
