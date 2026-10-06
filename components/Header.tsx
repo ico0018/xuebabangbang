@@ -9,10 +9,10 @@ export function Header() {
           <span className="text-[17px] font-black tracking-[-0.03em] text-[#1d1d1b]">学霸帮帮</span>
         </Link>
 
-        <nav aria-label="主导航" className="flex items-center gap-5 text-sm font-bold text-black/55 sm:gap-7">
+        <nav aria-label="主导航" className="flex items-center gap-5 text-sm font-bold text-black/60 sm:gap-7">
           <Link href="/#tools" className="transition hover:text-black">三个工具</Link>
           <Link href="/#about" className="hidden transition hover:text-black sm:block">为什么做</Link>
-          <Link href="/tools" className="rounded-full border border-black/15 px-3.5 py-2 text-[#1d1d1b] transition hover:border-black/35">工具箱</Link>
+          <Link href="/tools" className="rounded-full border border-black/10 px-3.5 py-2 text-[#1d1d1b] transition hover:border-black/40">工具箱</Link>
         </nav>
       </div>
     </header>
