@@ -1,0 +1,12 @@
+{
+  "results": [
+    "/: image enlarge, Esc/focus return, close button, backdrop close, and actual image download passed",
+    "/about: image enlarge, Esc/focus return, close button, backdrop close, and actual image download passed",
+    "Missing image returns to the placeholder; injected fixture exists only in this isolated test browser"
+  ],
+  "contrast": {
+    "button": 5.7151707291376015,
+    "body": 12.675137232309485,
+    "muted": 5.377776117400473
+  }
+}

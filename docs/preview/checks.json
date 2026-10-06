@@ -1,0 +1,12 @@
+{
+  "results": [
+    "All four tool/parent buttons navigate to the exact requested URLs",
+    "Home anchors, /about navigation, cross-page community link, return-to-tools all passed",
+    "No horizontal overflow or clipped text at nine widths (320–1440 px), across all three routes; cards and desktop buttons aligned",
+    "Keyboard focus is visible; all primary buttons meet the 44 px touch target",
+    "/tools remains accessible; search and category filtering work with the updated names",
+    "Absent QR shows an honest placeholder and no scan/download action",
+    "No browser runtime errors"
+  ],
+  "errors": []
+}
