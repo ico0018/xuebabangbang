@@ -20,7 +20,7 @@ const featured = [
         <p className="text-xs font-bold tracking-[0.18em] text-black/40">今天读一句</p>
         <p className="mt-4 font-serif text-[22px] leading-9 text-[#2c2a24] sm:text-2xl">小荷才露尖尖角</p>
         <p className="font-serif text-[22px] leading-9 text-[#2c2a24] sm:text-2xl">早有蜻蜓立上头</p>
-        <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-black/45">
+        <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-black/50">
           <span className="rounded-full border border-black/10 px-2.5 py-1">读懂</span>
           <span>→</span>
           <span className="rounded-full border border-black/10 px-2.5 py-1">练一练</span>
@@ -68,9 +68,9 @@ const featured = [
       <div className="rounded-[22px] border border-black/10 bg-[#f8fbfc] p-5 shadow-[0_10px_25px_rgba(31,48,56,0.08)]">
         <p className="text-xs font-bold tracking-[0.18em] text-black/40">今天</p>
         <div className="mt-4 space-y-3">
-          <div className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#24343b]"><span className="grid h-6 w-6 place-items-center rounded-full border border-black/15 text-xs">1</span>语文默写 <span className="ml-auto text-xs font-medium text-black/35">15 min</span></div>
-          <div className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#24343b]"><span className="grid h-6 w-6 place-items-center rounded-full border border-black/15 text-xs">2</span>数学订正 <span className="ml-auto text-xs font-medium text-black/35">20 min</span></div>
-          <div className="flex items-center gap-3 rounded-xl border border-dashed border-black/15 px-4 py-3 text-sm font-semibold text-black/40"><span className="grid h-6 w-6 place-items-center rounded-full border border-black/10 text-xs">3</span>做完，自己检查</div>
+          <div className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#24343b]"><span className="grid h-6 w-6 place-items-center rounded-full border border-black/10 text-xs">1</span>语文默写 <span className="ml-auto text-xs font-medium text-black/40">15 min</span></div>
+          <div className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#24343b]"><span className="grid h-6 w-6 place-items-center rounded-full border border-black/10 text-xs">2</span>数学订正 <span className="ml-auto text-xs font-medium text-black/40">20 min</span></div>
+          <div className="flex items-center gap-3 rounded-xl border border-dashed border-black/10 px-4 py-3 text-sm font-semibold text-black/40"><span className="grid h-6 w-6 place-items-center rounded-full border border-black/10 text-xs">3</span>做完，自己检查</div>
         </div>
       </div>
     ),
@@ -90,7 +90,7 @@ export default function HomePage() {
               真的不用再
               <span className="relative ml-2 inline-block">
                 抄十遍。
-                <span className="absolute -bottom-1 left-0 h-[10px] w-full bg-[#f0b95a]/65" aria-hidden="true" />
+                <span className="absolute -bottom-1 left-0 h-[10px] w-full bg-[#f0b95a]/60" aria-hidden="true" />
               </span>
             </h1>
           </div>
@@ -108,12 +108,12 @@ export default function HomePage() {
       </section>
 
       <section id="tools" className="mx-auto max-w-7xl scroll-mt-24 px-5 pb-20 pt-8 sm:px-8 sm:pb-28 lg:px-10">
-        <div className="mb-7 flex items-end justify-between gap-6 border-b border-black/15 pb-4">
+        <div className="mb-7 flex items-end justify-between gap-6 border-b border-black/10 pb-4">
           <div>
             <p className="text-xs font-black tracking-[0.18em] text-black/40">现在能用的</p>
             <h2 className="mt-2 text-2xl font-black tracking-[-0.035em] sm:text-3xl">今天，先卡在哪儿？</h2>
           </div>
-          <a href="/tools" className="hidden text-sm font-bold text-black/55 transition hover:text-black sm:block">全部工具 →</a>
+          <a href="/tools" className="hidden text-sm font-bold text-black/60 transition hover:text-black sm:block">全部工具 →</a>
         </div>
 
         <div className="space-y-4">
@@ -128,14 +128,14 @@ export default function HomePage() {
               <div className={`grid gap-8 p-6 sm:p-8 lg:grid-cols-2 lg:items-center lg:p-10 ${index % 2 === 1 ? "lg:[&>div:first-child]:order-2" : ""}`}>
                 <div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-black tracking-[0.16em] text-black/45">{item.kicker}</span>
-                    <span className="h-px w-10 bg-black/15" aria-hidden="true" />
-                    <span className="text-xs font-bold text-black/35">{item.name}</span>
+                    <span className="text-xs font-black tracking-[0.16em] text-black/50">{item.kicker}</span>
+                    <span className="h-px w-10 bg-black/10" aria-hidden="true" />
+                    <span className="text-xs font-bold text-black/40">{item.name}</span>
                   </div>
                   <h3 className={`mt-5 whitespace-pre-line text-[34px] font-black leading-[1.08] tracking-[-0.045em] sm:text-[42px] ${item.ink}`}>{item.title}</h3>
                   <p className="mt-5 max-w-xl text-[15px] font-medium leading-7 text-black/60 sm:text-base">{item.description}</p>
                   <p className="mt-5 text-xs font-bold tracking-wide text-black/40">{item.note}</p>
-                  <span className="mt-7 inline-flex items-center gap-2 border-b border-black/35 pb-1 text-sm font-black text-black/75 transition group-hover:gap-3 group-hover:border-black">
+                  <span className="mt-7 inline-flex items-center gap-2 border-b border-black/40 pb-1 text-sm font-black text-black/75 transition group-hover:gap-3 group-hover:border-black">
                     {item.action} <span aria-hidden="true">→</span>
                   </span>
                 </div>
@@ -145,7 +145,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        <a href="/tools" className="mt-5 flex min-h-12 items-center justify-center rounded-2xl border border-black/15 bg-[#ece7dc] text-sm font-black text-black/60 sm:hidden">
+        <a href="/tools" className="mt-5 flex min-h-12 items-center justify-center rounded-2xl border border-black/10 bg-[#ece7dc] text-sm font-black text-black/60 sm:hidden">
           看全部工具
         </a>
       </section>
@@ -171,7 +171,7 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-16 lg:px-10">
-        <div className="flex flex-col gap-4 border-b border-black/15 pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-4 border-b border-black/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-black text-[#b84d36]">学霸帮帮</p>
             <p className="mt-2 text-2xl font-black tracking-[-0.035em] sm:text-3xl">这个站还会慢慢长大。</p>
