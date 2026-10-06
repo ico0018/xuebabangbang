@@ -8,8 +8,6 @@ import { ToolGrid } from "./ToolGrid";
 const categories: { id: "all" | ToolCategory; label: string }[] = [
   { id: "all", label: "全部" },
   { id: "chinese", label: "语文" },
-  { id: "math", label: "数学" },
-  { id: "english", label: "英语" },
   { id: "general", label: "学习管理" },
 ];
 
