@@ -1,0 +1,14 @@
+[Unit]
+Description=Renew isolated public-IP preview TLS certificate
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+WorkingDirectory=/srv/xuebabangbang-unified-preview
+UMask=0077
+TimeoutStartSec=15min
+# The deploy hook needs the owner's existing noninteractive sudo permission.
+# Do not add NoNewPrivileges: it would prevent sudo from testing/reloading Nginx.
+ExecStart=/srv/xuebabangbang-unified-preview/.certbot-runtime/bin/certbot renew --noninteractive --config-dir /srv/xuebabangbang-unified-preview/ip-tls --work-dir /srv/xuebabangbang-unified-preview/public-ip-review/acme-work --logs-dir /srv/xuebabangbang-unified-preview/public-ip-review/acme-logs --deploy-hook /srv/xuebabangbang-unified-preview/portal/ops/reload-preview-nginx.sh
