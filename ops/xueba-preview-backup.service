@@ -1,8 +1,10 @@
 [Unit]
-Description=Back up isolated Xueba preview database to private COS
+Description=Back up isolated Xueba preview database
 [Service]
 Type=oneshot
 User=ubuntu
 WorkingDirectory=/srv/xuebabangbang-unified-preview/portal
-ExecStart=/bin/bash ops/backup.sh
+Environment=DOCKER_HOST=unix:///run/user/1000/docker.sock
+Environment=BACKUP_TARGET=cos
+ExecStart=/bin/bash ops/backup.sh ${BACKUP_TARGET}
 NoNewPrivileges=true
