@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "sources": [
+    {
+      "repo": "portal",
+      "branch": "feature/unified-user-system",
+      "commit": "81abd4a89b9f37295c7e8c5c3aa64940b8a5eb61",
+      "sha256": "c04b8478069d1388267f61e555074fe255acf45033b0b33ede97b6e3057d6fbf"
+    },
+    {
+      "repo": "taskhelper",
+      "branch": "feature/unified-user-system",
+      "commit": "aeded818f3efb716624257b354cb9624c148669e",
+      "sha256": "5e606bbb99c7347798aa70b05e174adad01fab81508f722dae6624ff2103d66e"
+    },
+    {
+      "repo": "hanzi",
+      "branch": "feature/unified-user-system",
+      "commit": "ffaa0b705497b2371889f5a3783c7bc5aa5dc77f",
+      "sha256": "b2929e346c33df034a95b2c8d1b8b314222102e1b9a69405c363737edccdb5ba"
+    },
+    {
+      "repo": "guwen",
+      "branch": "feature/unified-user-system",
+      "commit": "16e652916600247c34d7187939e4cb93a1405f2a",
+      "sha256": "393b7f362546f534119c253880ce9b325da873541735fae2f42667d864e5019c"
+    },
+    {
+      "repo": "taskhelper-out",
+      "branch": "feature/unified-user-system",
+      "commit": "aeded818f3efb716624257b354cb9624c148669e",
+      "sha256": "bcf1183b681f2cf29f355a2fd7690de744b7e33a7f3ee762f1cbe50731f3b271"
+    }
+  ],
+  "image": "sha256:60c4365bf757b85fd55c382164f5338bda5f3d02f26c0a873a711664371b60f0",
+  "databaseUnchanged": true,
+  "databaseSHA256": "f2661876532b88790a35c44bc74e1c5b084e7f1dc239911b453058bbcb834665",
+  "productionUnchanged": true,
+  "productionSHA256": "05c355b6bf439819fc155d2508da24451bd96ddb1f8a7f4d18f2b074c4de84c5",
+  "rootless": true,
+  "backupUser": "ubuntu",
+  "publicPortsAdded": false
+}

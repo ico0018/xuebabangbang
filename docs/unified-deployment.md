@@ -66,3 +66,10 @@ SSH凭证、COS与SMTP若尚未提供，部署和对应实测必须标记未完�
 详见 unified-registration.md。独立预览显式 REQUIRE_EMAIL_VERIFICATION=false，MAIL_PROVIDER=disabled，ENABLE_DEV_MAIL=false；缺省验证仍为true。部署前备份测试数据库和旧镜像，只执行新增0001兼容迁移。生产不执行。
 
 TRUSTED_PROXY_SECRET 是服务端与回环Nginx共享的随机32位以上私密口令，存于0600 .env.preview；不提交Git。私有 /etc/nginx/snippets/xueba-unified-preview-proxy.conf 必须由部署者生成（0600）：设置 proxy_set_header X-Xbb-Proxy-Secret 为相同口令，以及 proxy_set_header X-Xbb-Client-Ip $remote_addr。仓库预览Nginx配置在所有API代理位置include该文件，必须先创建再 nginx -t/reload。仅覆盖单独预览块；不调整正式站/防火墙。错误或未配代理凭据时使用共享限流桶，不相信浏览器传入的地址。
+
+
+## 家长入口简化部署（2026-10-08）
+
+四个最终feature分支业务归档与taskhelper静态产物均按SHA256核验后部署，环境配置、Nginx、数据库结构及rootless/ubuntu架构不变。部署前保留数据库备份、原应用image和四仓库原归档；运行库账号/孩子/学习状态完整摘要在替换前后相同，生产主页摘要也相同。当前清单为 artifacts/manifest.json 与 parent-release.json；结果见 docs/evidence/parent-release-results.json。后续纯文档提交独立记录。
+
+新家长检查入口：账号 localhost:8320/account、汉字 localhost:8321/parent.html、古文 localhost:8322/parent.html、任务 localhost:8323/parent/。原学生入口不变，记录同步/备份/恢复只显示于家长页。SSH本地连接已恢复，所有监听仅在127.0.0.1；没有新公网端口。无新增迁移，回滚仅需旧image和静态归档，详见 unified-parent-controls.md。

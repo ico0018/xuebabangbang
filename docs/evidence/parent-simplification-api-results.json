@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-08T08:03:30.196Z",
+  "environment": "Independent local real PostgreSQL; actual API/auth handlers on QA HTTP server",
+  "database": "parent_qa_1791446607876",
+  "results": [
+    {
+      "label": "Unverified registration still starts a session without configured SMTP; parent grant cannot be forged",
+      "status": "PASS"
+    },
+    {
+      "label": "Chinese three-choice challenge, wrong/tampered/session-bound/extra-field responses are refused",
+      "status": "PASS"
+    },
+    {
+      "label": "Correct answer grants current login only and permits real child/task creation",
+      "status": "PASS"
+    },
+    {
+      "label": "16+ minute marker and rolling-session continuation do not request parent verification again",
+      "status": "PASS"
+    },
+    {
+      "label": "Other parent cannot read/write this family and unverified administrator remains denied",
+      "status": "PASS"
+    },
+    {
+      "label": "Logout/new login clears parent grant while cloud data remains; locked verified admin writes denied",
+      "status": "PASS"
+    }
+  ]
+}

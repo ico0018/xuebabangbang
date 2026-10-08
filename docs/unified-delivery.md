@@ -10,12 +10,16 @@
 
 | 仓库           | 已实现                                                                           | 已验证的功能提交                                                                           | 草稿 PR                                                       |
 | -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| xuebabangbang  | 统一认证、账号中心、多孩子、管理员、云 API、迁移、隔离 Docker/Nginx/COS/备份配置 | 0c66b0a706e4ff9dd23b8f7e847db1ef6671e694（运行镜像业务来源；后续为文档证据提交） | [PR #3](https://github.com/ico0018/xuebabangbang/pull/3)      |
-| AdhdTaskHelper | Repository + CloudSyncAdapter、真实家长验证、孩子独立缓存与离线记录              | 3a3a5f7a9d609fcae4a9bff41e1bc063c13951a9                                                   | [PR #3](https://github.com/ico0018/AdhdTaskHelper/pull/3)     |
-| hanzi_garden   | 静态生字掌握/听写进度及队列同步                                                  | 86d87007915f0daf3961f46fb1540e5e0b2ef6e4                                                   | [PR #4 → dev](https://github.com/ico0018/hanzi_garden/pull/4) |
-| guwen_leyuan   | 静态阅读/学习/默写记录同步                                                       | bb193d1e4824e6abfe211700c812f28f45837deb                                                   | [PR #1](https://github.com/ico0018/guwen_leyuan/pull/1)       |
+| xuebabangbang  | 统一认证、账号中心、多孩子、管理员、云 API、迁移、隔离 Docker/Nginx/COS/备份配置 | 81abd4a89b9f37295c7e8c5c3aa64940b8a5eb61（运行镜像业务来源；后续为文档证据提交） | [PR #3](https://github.com/ico0018/xuebabangbang/pull/3)      |
+| AdhdTaskHelper | Repository + CloudSyncAdapter、算式家长入口、孩子独立缓存与离线记录              | aeded818f3efb716624257b354cb9624c148669e                                                   | [PR #3](https://github.com/ico0018/AdhdTaskHelper/pull/3)     |
+| hanzi_garden   | 静态生字掌握/听写进度及队列同步                                                  | ffaa0b705497b2371889f5a3783c7bc5aa5dc77f                                                   | [PR #4 → dev](https://github.com/ico0018/hanzi_garden/pull/4) |
+| guwen_leyuan   | 静态阅读/学习/默写记录同步                                                       | 16e652916600247c34d7187939e4cb93a1405f2a                                                   | [PR #1](https://github.com/ico0018/guwen_leyuan/pull/1)       |
 
 认证、用户/数据、工具同步和基础设施分别提交。草稿不代表发布许可。汉字沿用仓库 dev 门禁，其余PR指向main但保持草稿；没有任何合并。
+
+## 家长入口与记录管理简化
+
+最新四个业务提交已部署，独立云端八组浏览器验收与八组认证/API回归PASS。汉字算式三选一开启当前登录的家长操作；取消重复密码和15分钟锁定，记录管理仅在家长页。没有新增数据库迁移或修改原学习数据。原管理员仍可登录；原站与数据摘要不变。当前 image 为 `sha256:60c4365bf757b85fd55c382164f5338bda5f3d02f26c0a873a711664371b60f0`。详见 [本轮改动与回滚](unified-parent-controls.md)、[独立验收](unified-parent-qa.md) 与 `evidence/parent-*.json`。后续纯文档提交不改变表内业务来源。
 
 ## 注册机制优化
 
@@ -25,7 +29,7 @@
 
 提供 `/register`、`/login`、`/forgot-password`、`/reset-password`、`/account`、`/admin`。Better Auth官方密码认证、可配置邮箱验证和重置负责密码协议，Session在PostgreSQL；HttpOnly Cookie，HTTPS时Secure，14天有效期，数据库限流，明确Origin/CORS。认证token不放localStorage。远程认证强制HTTPS，HTTP仅允许本机SSH转发的localhost预览。
 
-一个家长可创建、编辑、切换多个孩子，只记录昵称和可选年级。删除需要再验证家长密码及输入孩子昵称二次确认。家长再验证按当前服务端Session短期授权；修改任务、模板、家长评分等必须授权，儿童计时、自检、提醒消费和合法每日结算仍可正常同步。
+一个家长可创建、编辑、切换多个孩子，只记录昵称和可选年级。删除需要输入孩子昵称二次确认。家长通过服务端算式题开启当前登录的管理权限，不重复密码、不设十五分钟锁定；修改任务、模板、家长评分等必须授权，儿童计时、自检、提醒消费和合法每日结算仍可正常同步。
 
 管理员只有服务端role=admin可访问；提供搜索、用户详情、状态恢复/禁用、Session撤销、统计和审计。禁用撤销已有Session并拒绝创建新Session。不能查询密码或任意修改别人学习内容。首个管理员由服务器命令对已验证邮箱提权，要求显式确认，不创建默认管理员。
 
