@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "signup": [
+    400,
+    400,
+    400,
+    400,
+    429,
+    429
+  ],
+  "signin": [
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    429,
+    429
+  ],
+  "probeStartedAt": 1791443581.4723864,
+  "afterRestart": {
+    "signup": 429,
+    "signin": 429
+  },
+  "retryAfter": 52,
+  "results": [
+    "Loopback Nginx overwrites forged proxy secret and IP headers; rotating headers cannot bypass real signup/login IP buckets",
+    "Signup and login have independent persistent cooldowns; both return 429 across the final app replacement"
+  ]
+}

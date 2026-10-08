@@ -1,3 +1,7 @@
+# 注册优化复验更新
+
+2026-10-08当前注册优化的实际云端测试由本任务执行：7组独立数据库认证/安全集成、7个三工具浏览器场景、4组手机与桌面注册/登录/跳转和旧管理员复验已PASS。证据为evidence/registration-*.json，最终页面修正版、伪造代理头、真实容器替换后限流持续和数据保留均PASS，可以人工验收。详细配置、安全门禁、迁移和回滚见unified-registration.md。以下独立QA结论保留为第一阶段历史记录；当前预览已明确关闭邮件Provider，并允许普通免验证注册。
+
 # Tencent preview — independent closeout evidence review
 
 Date: 2026-10-08 (Asia/Shanghai)

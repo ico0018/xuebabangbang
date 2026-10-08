@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "environment": "Tencent Guangzhou / rootless Docker PostgreSQL / SSH tunnel",
+  "results": [
+    "Browser child switch isolates and restores each profile",
+    "Guest localStorage history remains intact",
+    "Offline mutation persists dirty and reconnect sync succeeds",
+    "Second independent browser context restores cloud state",
+    "Hanzi uses the same unverified account and profile across localhost ports",
+    "Taskhelper parent password gate, task creation, cloud save and child display pass",
+    "Logout/login restores all three cloud records; another account cannot read/write any of them or inherit selected child"
+  ],
+  "browserErrors": []
+}

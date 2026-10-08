@@ -33,8 +33,32 @@
 
 集成运行：在本机隔离PG55432提供unified/runtime/.env.test，执行 `npm run test:auth-integration`。脚本只创建新的registration_policy/registration_migration数据库，拒绝任意外网数据库。云端使用显式AUTH_TEST_ALLOW_PREVIEW=true，只允许db/xueba_preview作为创建隔离测试数据库的起点，不对运行库执行测试写入。结果不含账号密码/token。
 
-云端部署和最终浏览器回归记录待完成后补入 docs/evidence/registration-*.json。
+云端7组实际PostgreSQL/认证API集成测试也已PASS，使用新隔离数据库，不对运行库执行测试样本写入。实际SSH入口的浏览器三工具7场景PASS：未验证账号、两孩子、原游客记录、离线补传、独立浏览器恢复、汉字/古文/任务真实学习记录、退出再登录恢复，以及其他账号三工具读写均404。手机注册/登录/返回汉字与古文、重复邮箱、未配邮件明确提示、旧管理员及原孩子保留、320/390/768/1440布局4组PASS。
+
+云端迁移前后原有用户/密码/孩子/学习记录完整排序摘要均为 d05d789a97f052b729adfe0a6416bf32ff8d269a00c71f96ffe3544f5f8f8a38；原站主页摘要前后相同。备份 preview-20261008T064724Z-12163.dump 保留在独立预览目录。最终页面修正为“账号已就绪”，不对未验证邮箱显示已验证；管理员页面也检查真实验证状态。
+
+证据见 docs/evidence/registration-api-results.json、registration-cloud-api-results.json、registration-tool-results.json、registration-ui-results.json。最终云端修正版和复检已完成：业务构建来源0c66b0a706e4ff9dd23b8f7e847db1ef6671e694，镜像sha256:8f815d691f856b08e7082688a300331c736c685274ad1b92807e5f3012bd1aa2。后续提交仅更新文档/证据，业务代码与运行镜像来源相同。
+
+真实回环Nginx覆写伪造代理凭据与轮换IP头：注册前4次400、后2次429；独立登录前8次400、后2次429，app替换后两者仍429且有Retry-After。等待冷却后最终手机完整注册/登录/跳转/真实未验证提示、旧管理员与原孩子检查再次PASS。最终替换前后完整用户/密码/孩子/学习记录摘要均为67bfa62014ee7d85ed9ef4114a1a5ea1d5a71aa749a460752f3b1d8809f571a4。正式站摘要保持05c355b6bf439819fc155d2508da24451bd96ddb1f8a7f4d18f2b074c4de84c5，nginx/原站服务active。rootless、backup User=ubuntu、Nginx语法检查均PASS，未新增公网端口。
+
+最终证据为registration-final-release-results.json、registration-rate-results.json及最终registration-ui-results.json。**READY FOR OWNER REVIEW；DNS NOT CHANGED。**
 
 迁移前备份原测试库、旧镜像和环境文件。应用回滚恢复旧测试镜像及旧env；新增列/索引可保留，旧代码可读取原结构。旧镜像仍严格要求验证，已有未验证用户需要邮件验证，故回滚体验可能变严格；数据不会删除。不要删除列、down -v或覆盖运行库。如果迁移失败，事务回滚，保留旧app；如确需完整DB恢复，使用备份恢复到新隔离数据库并另行审核连接切换。只影响预览项目。
 
 最终必须等待人工验收；Draft PR不合并，DNS不变。
+
+## 修改文件清单
+
+仅 portal 功能分支修改业务代码，另外三个学习仓库无变更。
+
+| 范围 | 文件 |
+| --- | --- |
+| 服务端认证与邮箱策略 | lib/auth.ts、lib/auth-policy.ts、lib/auth-throttle.ts、app/api/auth/[...all]/route.ts |
+| 受保护API/管理员 | lib/api.ts、app/admin/page.tsx |
+| 表单/账号提示/安全返回 | components/AuthForm.tsx、components/AccountCenter.tsx、lib/auth-navigation.ts |
+| 向后兼容数据库迁移 | lib/schema.ts、drizzle/0001_far_phantom_reporter.sql、drizzle/meta/0001_snapshot.json、drizzle/meta/_journal.json |
+| 预览代理/默认配置 | ops/nginx.preview.conf、.env.example；真实私有配置和密钥不在Git |
+| 自动化测试 | tests/auth-policy.test.ts、tests/support/auth-server.ts、scripts/test-auth-integration.mjs、package.json |
+| 文档与证据 | docs/unified-registration.md、unified-delivery.md、unified-deployment.md、unified-cloud-qa.md、docs/evidence/registration-*.json |
+
+工作区 unified/STATUS.md 和腾讯云人工检查说明.md同步更新；运行工具runtime/remote.py修正UTF-8输出编码（不提交Git），现有SSH连接方式不变。运行环境文件、测试凭据、邮件token与密钥均未提交。

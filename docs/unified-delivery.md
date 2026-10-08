@@ -10,26 +10,26 @@
 
 | 仓库           | 已实现                                                                           | 已验证的功能提交                                                                           | 草稿 PR                                                       |
 | -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| xuebabangbang  | 统一认证、账号中心、多孩子、管理员、云 API、迁移、隔离 Docker/Nginx/COS/备份配置 | e5417c2f330f54c21ec7c366167cceb1a9b2365f；基础设施8d4ebd5776304f34bab817b07642d4e9ccb275f5 | [PR #3](https://github.com/ico0018/xuebabangbang/pull/3)      |
+| xuebabangbang  | 统一认证、账号中心、多孩子、管理员、云 API、迁移、隔离 Docker/Nginx/COS/备份配置 | 0c66b0a706e4ff9dd23b8f7e847db1ef6671e694（运行镜像业务来源；后续为文档证据提交） | [PR #3](https://github.com/ico0018/xuebabangbang/pull/3)      |
 | AdhdTaskHelper | Repository + CloudSyncAdapter、真实家长验证、孩子独立缓存与离线记录              | 3a3a5f7a9d609fcae4a9bff41e1bc063c13951a9                                                   | [PR #3](https://github.com/ico0018/AdhdTaskHelper/pull/3)     |
-| hanzi_garden   | 静态生字掌握/听写进度及队列同步                                                  | 94fe0ff29bb1fbc658a4ad94a9d231bd6e16bd7d                                                   | [PR #4 → dev](https://github.com/ico0018/hanzi_garden/pull/4) |
+| hanzi_garden   | 静态生字掌握/听写进度及队列同步                                                  | 86d87007915f0daf3961f46fb1540e5e0b2ef6e4                                                   | [PR #4 → dev](https://github.com/ico0018/hanzi_garden/pull/4) |
 | guwen_leyuan   | 静态阅读/学习/默写记录同步                                                       | bb193d1e4824e6abfe211700c812f28f45837deb                                                   | [PR #1](https://github.com/ico0018/guwen_leyuan/pull/1)       |
 
 认证、用户/数据、工具同步和基础设施分别提交。草稿不代表发布许可。汉字沿用仓库 dev 门禁，其余PR指向main但保持草稿；没有任何合并。
 
 ## 注册机制优化
 
-正在实施2026-10-08免验证注册优化。新机制、兼容迁移、安全边界和最终证据见 [unified-registration.md](unified-registration.md)。以下第一阶段邮箱流程属于历史验证记录，最终预览配置以注册优化记录为准。
+2026-10-08免验证注册优化已通过云端模式/权限/三工具/手机浏览器复验，最终页面修正版部署、真实容器替换限流和数据保留复检也已PASS，可以人工验收。新机制、兼容迁移、安全边界和最终证据见 [unified-registration.md](unified-registration.md)。以下第一阶段邮箱流程属于历史验证记录，最终预览配置以注册优化记录为准。
 
 ## 账号和权限
 
-提供 `/register`、`/login`、`/forgot-password`、`/reset-password`、`/account`、`/admin`。Better Auth官方密码认证、邮箱验证和重置负责密码协议，Session在PostgreSQL；HttpOnly Cookie，HTTPS时Secure，14天有效期，数据库限流，明确Origin/CORS。认证token不放localStorage。远程认证强制HTTPS，HTTP仅允许本机SSH转发的localhost预览。
+提供 `/register`、`/login`、`/forgot-password`、`/reset-password`、`/account`、`/admin`。Better Auth官方密码认证、可配置邮箱验证和重置负责密码协议，Session在PostgreSQL；HttpOnly Cookie，HTTPS时Secure，14天有效期，数据库限流，明确Origin/CORS。认证token不放localStorage。远程认证强制HTTPS，HTTP仅允许本机SSH转发的localhost预览。
 
 一个家长可创建、编辑、切换多个孩子，只记录昵称和可选年级。删除需要再验证家长密码及输入孩子昵称二次确认。家长再验证按当前服务端Session短期授权；修改任务、模板、家长评分等必须授权，儿童计时、自检、提醒消费和合法每日结算仍可正常同步。
 
 管理员只有服务端role=admin可访问；提供搜索、用户详情、状态恢复/禁用、Session撤销、统计和审计。禁用撤销已有Session并拒绝创建新Session。不能查询密码或任意修改别人学习内容。首个管理员由服务器命令对已验证邮箱提权，要求显式确认，不创建默认管理员。
 
-邮件Provider明确配置：disabled会报错，不假装已发送；development需显式启用，只写私有测试邮箱文件；smtp需真实配置。目前已验证development链接流程，未验证真实SMTP送达。
+邮件Provider明确配置：disabled会明确拒绝找回/邮箱验证，免验证注册可正常使用，不假装已发送；development需显式启用，只写私有测试邮箱文件；smtp需真实配置。目前已验证development链接流程，未验证真实SMTP送达。
 
 ## 数据库 Schema
 
@@ -97,7 +97,7 @@ QA独立捕捉并修复：家长权限误拦截儿童提醒消费/跨日结算�
 - http://localhost:8323/ 任务小帮手
 - http://localhost:8324/ 本机私有测试信箱
 
-这些localhost入口实际连接腾讯云，原本本机预览已停止。随机密码的人工检查管理员账号仅保存在 F:/taskHelper/unified/runtime/人工检查账号.txt，经真实验证邮箱后由服务端提权并审计；不设默认/公开管理员。也可自行注册测试邮箱，从私有测试信箱打开验证或重置链接。正式网站旧localStorage仍保留在原origin，测试页不会自动读取它。
+这些localhost入口实际连接腾讯云，原本本机预览已停止。随机密码的人工检查管理员账号仅保存在 F:/taskHelper/unified/runtime/人工检查账号.txt，经真实验证邮箱后由服务端提权并审计；不设默认/公开管理员。当前可自行注册邮箱与密码，立即自动登录，无需邮件验证；真实SMTP尚未配置，找回/确认邮箱明确提示暂不可用，私有信箱仅保留第一阶段历史邮件。正式网站旧localStorage仍保留在原origin，测试页不会自动读取它。
 
 完整检查指南：F:/taskHelper/unified/腾讯云人工检查说明.md。服务器构建的准确四分支提交和归档SHA写入 /srv/xuebabangbang-unified-preview/artifacts/manifest.json；最新 docs/ops 之后的提交以该部署清单为准。
 
