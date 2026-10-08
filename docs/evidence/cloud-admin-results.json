@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "results": [
+    "Verified random review administrator can access server-backed mobile admin page",
+    "Admin write denied before password unlock",
+    "Disable, restore and revoke sessions execute with audit records"
+  ],
+  "browserErrors": []
+}

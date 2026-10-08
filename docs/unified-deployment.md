@@ -10,7 +10,7 @@
 
 1. SSH检查 Ubuntu、现有服务、磁盘内存、Docker 与端口占用；保留 `/srv/xuebabangbang`、`/var/www` 和现有 Nginx 配置。
 2. 上传四个分支的完整归档到新目录，记录四个完整提交号。原始 Git、环境文件和测试邮件不发布到静态目录。
-3. 使用官方 Docker Ubuntu安装方式安装Docker Engine及Compose插件（已安装时不重装）。不改现有防火墙，不开放5432。
+3. 使用官方 Docker Ubuntu安装方式安装Docker Engine及Compose插件（已安装时不重装），并以ubuntu的rootless Docker运行。不改现有防火墙，不开放5432。
 4. 主站复制 `.env.example` 为 `.env.preview`，随机生成独立数据库密码及 Better Auth secret，权限0600；配置四个 localhost 8320–8323 为 trusted origin。开发邮件需显式 `MAIL_PROVIDER=development`、`ENABLE_DEV_MAIL=true`、`DEV_MAIL_DIR=/app/mail-outbox`。这只会写私有测试邮件，真实外部邮件须SMTP。
 5. 汉字、古文静态配置的 API/账号中心使用 localhost:8320；任务工具以对应环境变量构建，主站三个工具链接指向8321/8322/8323。正式域名入口保留在原站。
 6. 主站执行 `bash ops/deploy-preview.sh`。复制独立 `ops/nginx.preview.conf` 到 `/etc/nginx/conf.d/xueba-unified-preview.conf`，`nginx -t`成功后只reload Nginx，不替换原站块。
@@ -43,7 +43,7 @@ bash ops/restore-drill.sh backups/实际文件.dump
 
 COS测试只删除当次脚本自己生成的唯一diagnostics文件；备份脚本不清理任何对象。恢复演练创建新的restore_drill数据库，保留供检查，不覆盖运行库。应在没有新写入的预览维护窗口立即比较备份与恢复的表行数；比较失败不能报告通过。生产恢复需要另外的明确授权与停写方案。
 
-确认COS和恢复演练通过后才安装启用 `xueba-preview-backup.service/.timer`，默认北京时间每天03:30。备份日志失败由systemd记录；需要实际核验定时任务状态，不把配置文件存在当成启用成功。
+COS和恢复演练通过后安装启用 `xueba-preview-backup.service/.timer`，默认北京时间每天03:30。备份日志失败由systemd记录；需要实际核验定时任务状态，不把配置文件存在当成启用成功。
 
 ## 回滚
 
@@ -52,3 +52,11 @@ COS测试只删除当次脚本自己生成的唯一diagnostics文件；备份脚
 ## 配置与上线前检查
 
 SSH凭证、COS与SMTP若尚未提供，部署和对应实测必须标记未完成。首个管理员只能由服务器脚本对已验证邮箱提权，不创建默认管理员或弱密码。大陆服务器正式切换前需核实备案及腾讯云接入备案；当前IP可达不等于备案已核实。正式域名TLS及DNS切换在人工验收后另行授权。
+
+## 本次实测运行记录
+
+2026-10-08用户明确授权复用此前SSH凭据后，本次隔离部署已完成。rootless Docker context与固定DOCKER_HOST socket运行，ubuntu无需docker组或root服务提权。四站仅回环，通过本机SSH隧道检查，原生产服务始终active。
+
+当前COS缺配置，明确使用独立systemd drop-in Environment=BACKUP_TARGET=local；ops/backup.sh默认cos仍要求真实COS成功。每天03:30后加0–300秒，本地备份实测Result=success/exit0。该模式仅本地备份，不称异地备份。未来提供COS后移除local目标覆盖并实测cos模式后才改变报告状态。环境文件0600、backups0700/dump0600、mail-outbox0700且文件0600。
+
+真实11表重启及新库恢复哈希匹配结果见unified-delivery.md和docs/evidence。人工检查入口、私有测试信箱及随机测试账号保存在本机unified目录，秘密不在Git。

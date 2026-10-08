@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "viewport": 390,
+  "authenticated": true,
+  "results": [
+    "Verified owner account center renders with real child list, no horizontal overflow or browser error"
+  ]
+}

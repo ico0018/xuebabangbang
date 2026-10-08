@@ -68,10 +68,14 @@ Earlier failed/interrupted development iterations are not marked PASS. Final evi
 
 ## Remaining gates
 
-- Tencent isolated server access/deployment, running server evidence and public/SSH-tunnel review URL.
+- Tencent isolated branch deployment and SSH review entrance: PASS (2026-10-08).
 - Real Tencent COS upload/read/delete and backup-to-COS verification.
 - Production SMTP provider/delivery.
 - Actual deployed HTTPS cross-subdomain cookie/CORS behavior.
 - Owner manual acceptance and explicit permission before merging main or changing production/DNS.
 
 DNS and production were not changed by QA.
+
+## Tencent deployed validation
+
+Cloud security, multi-tool browser sync, authenticated admin/mobile account views, public routes at four widths all PASS. Source evidence in docs/evidence. Database restart and fresh-database backup restore match all11 public table counts and sorted row hashes; downloaded dumpSHA matches. Rootless Ubuntu timer enabled with explicit local override and successful manual run. COS test exits1 on missing bucket, SMTP remains private development provider only. Those external checks and deployed domainHTTPS/filing are not PASS. Main/DNS and existing production are unchanged.

@@ -2,7 +2,7 @@
 
 日期：2026-10-08（北京时间）。
 
-**代码及本机验证已完成，四仓库分支已推送、草稿 PR 已创建。腾讯云尚未部署，等待当前聊天授权复用此前 SSH 凭据；不能把本机测试当作云端部署成功。main 与 DNS 均未修改。**
+**四个功能分支已部署到腾讯云独立测试环境，云端账号/权限/三工具同步与数据库重启、备份恢复实测通过。main、DNS 和原网站均未修改。COS、真实 SMTP 和正式域名 HTTPS/备案仍待配置核实。READY FOR OWNER REVIEW。**
 
 ## 四个仓库与审阅入口
 
@@ -62,37 +62,45 @@
 
 QA独立捕捉并修复：家长权限误拦截儿童提醒消费/跨日结算、非法静态Payload持久化、JSONB键序误判、未创建孩子时反复reload、存储额度失败后错误显示同步成功。各项已复验。
 
-## 尚未完成的外部验证
+## 腾讯云部署与人工检查
 
-| 项目                               | 当前真实状态                                                                        |
-| ---------------------------------- | ----------------------------------------------------------------------------------- |
-| 腾讯云分支部署 / 服务器状态        | 未登录本次部署；现有服务器报告只能作为此前背景。需当前聊天批准复用SSH凭据。         |
-| Docker Compose / Nginx在腾讯云实测 | 配置和脚本已完成，未在腾讯云运行，不标PASS。                                        |
-| COS上传→读取→删除                  | SDK脚本已完成，仅删除自建随机测试对象；Bucket/Region/CAM或STS尚未配置，未实测。     |
-| COS备份及定时任务                  | 脚本/恢复文档已完成，本机备份恢复PASS；COS上传、服务器恢复、定时器启用未验证。      |
-| 真SMTP                             | 未提供配置，未验证送达。                                                            |
-| 部署后跨子域HTTPS                  | localhost不同端口共享Cookie已实测；实际域名TLS/Cookie/CORS仍需部署后验证，未切DNS。 |
-| 备案与腾讯云接入备案               | 未核实，正式切换前需检查。                                                          |
+实际环境：腾讯云广州，服务器 134.175.136.31，新目录 /srv/xuebabangbang-unified-preview。普通用户 rootless Docker，独立项目 xueba-unified-preview；PostgreSQL17 持久卷，数据库无宿主机端口。账号服务127.0.0.1:3200，独立 Nginx 回环入口8320–8323。app/db均healthy，实测约82/74MiB，总内存可用2.6GiB。
 
-自动审批拒绝了从旧会话提取密码并建立SSH命令通道，理由是当前授权来源不足。已请求你在当前聊天确认；未绕过该拒绝。另曾尝试把备份service改为root被审批拒绝，已保留ubuntu权限，不执行该提权；部署时需检查ubuntu已有Docker访问权限或采用rootless Docker。
+云端已通过真实邮箱验证/密码重置/旧Session撤销、错误密码、HttpOnly/SameSite Cookie、服务端管理员和家长授权、跨用户孩子读写拒绝、Origin校验、409冲突与非法Payload拒绝。三工具同账号、两个孩子隔离、离线补传和另一浏览器恢复均PASS，无运行错误。登录后的移动端账号中心（真实孩子列表）及管理员后台另行PASS；四宽度六路由覆盖公共页面/登录引导，不代替已登录页面检查。
 
-任务小帮手继承的开发工具依赖审计仍有7项high（ESLint/serve等）；静态产物不运行这些工具，预览使用Python/Nginx。主站生产依赖audit无high/critical，4项moderate主要与迁移工具链有关。未使用force降级。
+云端数据库重启前后，以及真实custom-format备份恢复到新库后，11张业务表完整排序行哈希和数量全部一致。备份 SHA256：9f985af23444e771a353671e397ac170072ff5a03758fd9f9842e034fbdac7a6；服务器0600、备份目录0700；已通过SSH复制到本机并再次校验。恢复库 restore_drill_20261008030210_12297 保留供检查，未覆盖任何运行库。每日本地备份timer已启用，ubuntu执行、手动运行exit0，日志明确Local-only；预定北京时间03:30加0–300秒随机延迟。
 
-## 当前可访问的本机预览
+原 nginx/xuebabangbang-portal 服务始终active，原网站主页SHA前后相同。main和DNS没有修改。测试口仅服务器/本机回环可用，通过固定主机密钥SSH连接；没有公网HTTP密码登录。
 
-- http://localhost:8320/ 主站、账号中心
-- http://localhost:8321/welcome.html 汉字乐园
+| 待配置项 | 当前状态 |
+| --- | --- |
+| COS私有Bucket/Region+CAM或STS | 脚本实测exit1：COS_BUCKET is not configured。上传/读取/删除、COS异地备份未通过；不伪称成功。 |
+| 真实SMTP | 缺配置；私有开发信箱验证/重置真实token已通过，不发真实邮件。 |
+| 正式域名HTTPS跨子域 | 未切换域名；仅localhost同主机不同端口会话已实测。 |
+| ICP与腾讯云接入备案 | 未核实，正式切换前需用户平台信息或控制台核查。 |
+| 人工验收/合并上线 | 等待用户检查并另行明确授权。 |
+
+主站运行依赖audit无high/critical，4项moderate来自drizzle-kit旧esbuild开发服务器链；本环境不启动该开发服务器。主站完整开发依赖仍有13项告警（含7high），任务工具继承开发依赖有7high；这些是ESLint/开发服务器等工具链。未用force降级。静态工具由Nginx提供。
+
+## 测试入口
+
+当前电脑已启动SSH检查连接；双击 F:/taskHelper/unified/打开腾讯云测试版.cmd 可重新建立。
+
+- http://localhost:8320/account 账号中心
+- http://localhost:8320/admin 管理后台
+- http://localhost:8321/ 汉字乐园
 - http://localhost:8322/ 古文乐园
-- http://localhost:8323/ 任务小帮手，家长入口 `/parent/`
+- http://localhost:8323/ 任务小帮手
+- http://localhost:8324/ 本机私有测试信箱
 
-这些是当前电脑上的真实本机预览，**不是腾讯云地址**；当前会话服务在运行，机器/服务停止后需按保存的运行配置重启。使用测试账号；邮件由私有development outbox处理，不会发送到外部邮箱。正式HTTPS origin历史不在这些测试origin里，原记录未被删。
+这些localhost入口实际连接腾讯云，原本本机预览已停止。随机密码的人工检查管理员账号仅保存在 F:/taskHelper/unified/runtime/人工检查账号.txt，经真实验证邮箱后由服务端提权并审计；不设默认/公开管理员。也可自行注册测试邮箱，从私有测试信箱打开验证或重置链接。正式网站旧localStorage仍保留在原origin，测试页不会自动读取它。
 
-## 腾讯云待执行方式与回滚
+完整检查指南：F:/taskHelper/unified/腾讯云人工检查说明.md。服务器构建的准确四分支提交和归档SHA写入 /srv/xuebabangbang-unified-preview/artifacts/manifest.json；最新 docs/ops 之后的提交以该部署清单为准。
 
-见 `unified-deployment.md`：新目录 `/srv/xuebabangbang-unified-preview`，独立Compose名称，数据库Volume持久、5432不发布到宿主机，四入口只监听服务器loopback，通过SSH四端口转发验收。原 `/srv/xuebabangbang`、`/var/www`、现有Nginx块和服务保留。部署前保存四提交，上传分支归档；迁移/健康检查成功后才启用独立测试配置。
+## 回滚与后续
 
-回滚只管理独立预览app/镜像及测试配置，保留数据库volume、邮件与备份，不执行down -v。数据库恢复到全新库，不覆盖现有库。用户人工验收通过后，才另行授权main合并和正式切换；没有预先安排合并或DNS任务。
+见 unified-deployment.md。回滚只停止/替换独立预览app和测试Nginx配置，保留全部数据库volume、邮件和备份，不执行down -v。数据库恢复到新隔离库。原站配置和数据库保持原样。人工验收通过后才处理单独授权的main合并或正式发布。
 
-**尚未达到云端 READY FOR OWNER REVIEW：腾讯云部署与外部配置待完成。**
+**READY FOR OWNER REVIEW**
 
 **DNS NOT CHANGED**
