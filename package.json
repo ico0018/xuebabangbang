@@ -7,23 +7,37 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:generate": "drizzle-kit generate",
+    "test": "tsx --test tests/*.test.ts",
+    "admin:promote": "tsx scripts/admin.ts"
   },
   "dependencies": {
-    "next": "15.5.9",
+    "better-auth": "^1.7.7",
+    "cos-nodejs-sdk-v5": "^3.0.0",
+    "drizzle-orm": "^0.45.3",
+    "next": "^15.5.27",
+    "nodemailer": "^10.0.16",
+    "pg": "^8.23.1",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
     "@types/node": "24.10.1",
+    "@types/nodemailer": "^8.0.2",
+    "@types/pg": "^8.23.1",
     "@types/react": "19.1.16",
     "@types/react-dom": "19.1.9",
     "autoprefixer": "10.4.21",
+    "drizzle-kit": "^0.31.11",
     "eslint": "9.39.1",
-    "eslint-config-next": "15.5.9",
+    "eslint-config-next": "^15.5.27",
     "postcss": "8.5.6",
     "tailwindcss": "3.4.17",
+    "tsx": "^4.23.15",
     "typescript": "5.9.3"
   }
 }
