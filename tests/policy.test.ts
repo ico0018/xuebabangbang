@@ -111,3 +111,16 @@ test("public IP authentication accepts HTTPS with host-only cookies and rejects 
   assert.throws(() => validateAuthUrl("https://" + ip, ip));
   assert.throws(() => validateAuthUrl("https://" + ip, "xuebabangbang.cn"));
 });
+
+test("public preview TLS template rejects unknown Host before serving or proxying", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const template = await readFile(
+    new URL("../ops/nginx.public-ip.conf", import.meta.url),
+    "utf8",
+  );
+  const tls = template.slice(template.indexOf("listen 443 ssl;"));
+  const guard = tls.indexOf('if ($host != "134.175.136.31") { return 421; }');
+  assert(guard > 0);
+  assert(guard < tls.indexOf("location = /hanzi/parent.html"));
+  assert(guard < tls.indexOf("proxy_pass"));
+});
