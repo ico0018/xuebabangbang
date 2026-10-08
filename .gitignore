@@ -7,3 +7,4 @@ out/
 tsconfig.tsbuildinfo
 .dev-mail/
 mail-outbox/
+.test-runtime/

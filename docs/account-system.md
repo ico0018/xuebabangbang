@@ -28,12 +28,13 @@ BETTER_AUTH_URL 是固定干净 origin；远程域名必须 HTTPS。http 仅 loc
 
 ## 认证页面与 API
 
-/register、/login、/forgot-password、/reset-password、/account、/admin。邮箱验证后需再次输入家长密码才可添加或修改孩子档案。
+/register、/login、/forgot-password、/reset-password、/account、/admin。注册、邮箱验证及找回密码保持原有认证规则。登录后完成一次中文大写数字乘法选择题即可管理孩子档案，本次登录期间无需重复输入密码或答题。
 
 Better Auth 官方端点挂载 /api/auth/*。业务端点 /api/v1/*；所有写请求 Content-Type: application/json 并带允许的 Origin。缺少 Origin 的写请求拒绝。未登录 401，无权限 403，非本人档案返回 404，非法 Schema 400，过大 413，频繁请求 429，修订冲突 409。业务读写均不缓存。
 
-- GET /session → {user:{id,email,name,role},activeProfileId,parentUnlockedUntil}
-- POST /parent-unlock {password} → 以 Better Auth 实际验证当前账号密码，服务器 Session 保存 15 分钟管理权限。
+- GET /session → {user:{id,email,name,role},activeProfileId,parentReady,parentUnlockedUntil}
+- GET /parent-challenge → {challenge,question,choices}，中文大写数字乘法题与三个数字选项。签名题目有效五分钟，绑定当前服务器 Session，不返回正确答案标记。
+- POST /parent-unlock {challenge,answer:number} → 服务端核对 HMAC、Session 归属、题目有效期与乘法结果；答错不授权，尝试全账号限流每分钟五次，无密码回退。通过后 parentReady=true，持续当前登录；主动退出家长模式或登出后结束。
 - POST /parent-lock {} → 立即关闭管理权限。
 - GET /profiles → {profiles:[{id,nickname,grade}],activeProfileId}
 - POST /profiles {nickname,grade?} → 新孩子档案，同时设为当前孩子；需家长验证。
@@ -47,21 +48,23 @@ Better Auth 官方端点挂载 /api/auth/*。业务端点 /api/v1/*；所有写�
 
 支持 tool=taskhelper / hanzi / guwen。taskhelper payload 使用工具当前完整 databaseSchema（lib/taskhelper-models.ts 来自同批 taskhelper/src/lib/models.ts，未来模型变化须同时更新并测试版本兼容）。汉字和古文只允许已知 localStorage key，值须为可解析的 JSON 对象/数组文本；教材与其他浏览器数据不能上传。请求总体上限 1 MiB，当前 schemaVersion 仅接受 1。
 
-taskhelper 服务端独立比较任务定义、模板、孩子身份、计划任务列表、家长质量评价与评分基线。修改需短时家长权限。儿童计时、自检、复盘、完成奖励、合理的跨日扣分及非独立启动后的提醒清除可以同步。比较采用深层内容比较，避免 PostgreSQL JSONB 重新排列 key 产生虚假权限拒绝。
+taskhelper 服务端独立比较任务定义、模板、孩子身份、计划任务列表、家长质量评价与评分基线。修改需当前登录已开启家长入口。儿童计时、自检、复盘、完成奖励、合理的跨日扣分及非独立启动后的提醒清除可以同步。比较采用深层内容比较，避免 PostgreSQL JSONB 重新排列 key 产生虚假权限拒绝。
 
 ## 导入导出
 
 GET /export 下载本人所有孩子与状态，format=xuebabangbang-export-v1；不含密码、Session、其他用户数据。账号中心可以选择原孩子记录并确认恢复到当前孩子。
 
-POST /profiles/:id/import {confirmNickname,states:[{toolKey,revision,schemaVersion:1,payload}]}：先验证家长身份、归属、工具权限、所有 payload 和重复工具；同一事务内锁档案并校验每项 revision。任何冲突使全部导入回滚，不能部分覆盖。写入审计日志。离线迁移操作也可在各工具域内使用相同 state PUT。
+POST /profiles/:id/import {confirmNickname,states:[{toolKey,revision,schemaVersion:1,payload}]}：先检查家长入口状态、归属、工具权限、所有 payload 和重复工具；同一事务内锁档案并校验每项 revision。任何冲突使全部导入回滚，不能部分覆盖。写入审计日志。离线迁移操作也可在各工具域内使用相同 state PUT。
 
 ## 管理员
 
 GET /admin/users?q=邮箱或昵称（最多100项）、GET /admin/users/:id 查看基本资料和档案；不返回学习 payload。GET /admin/stats 提供用户/新增/孩子/工具与同步统计；今日使用 Asia/Shanghai。GET /admin/audit 返回最近100项日志。
 
-POST /admin/users/:id {action:"disable"|"restore"|"revoke-sessions"} 需服务器 admin 角色与短时家长验证。禁用与 Session 撤销为同一事务；禁用账号后登录 Session 创建钩子拒绝创建，业务请求再次读取 enabled 状态。禁止当前管理员自我禁用。所有变更写审计。
+POST /admin/users/:id {action:"disable"|"restore"|"revoke-sessions"} 需服务器确认已验证邮箱的 admin 角色，以及已开启的家长入口。计算题不会提升账号角色，也不会跳过后台的认证与权限校验。禁用与 Session 撤销为同一事务；禁用账号后登录 Session 创建钩子拒绝创建，业务请求再次读取 enabled 状态。禁止当前管理员自我禁用。所有变更写审计。
 
 ## 验证命令
 
 npm run lint / npm run typecheck / npm run test / npm run build。tests/policy.test.ts 与 tests/payload.test.ts 覆盖权限、真实敏感字段与儿童自动状态、Schema、JSONB顺序及配置边界。真实数据库/邮件/API验收由独立 QA 脚本执行，见 QA 交付文件。不能以单元测试替代真实 Session、PostgreSQL、邮件验证。
 
+
+家长入口是防儿童误点的简易门槛，不能作为成年人身份或密码重新验证的证明。服务器认证、管理员已验证角色、租户隔离、CSRF/Origin 与数据权限保持独立检查。复用 sessions.parent_unlocked_until 作为当前 Session 已完成题目的标志，初次通过写入该 Session expires_at；parentReady 始终同时检查真实 Session expires_at，因此滚动续期不会产生重复题目，无数据库迁移。旧字段返回当前真实 Session 到期时间，供旧接口兼容。签名题目五分钟内可重试，不是一次性令牌；不同 Session、登出再登录、过期或篡改均不能复用。

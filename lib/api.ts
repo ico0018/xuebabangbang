@@ -20,6 +20,11 @@ import {
 } from "./policy";
 import { hasVerifiedEmail } from "./auth-policy";
 import { validatePayload } from "./payload";
+import {
+  createParentChallenge,
+  verifyParentChallenge,
+  parentIsReady,
+} from "./parent-challenge";
 export class HttpError extends Error {
   constructor(
     public status: number,
@@ -80,11 +85,12 @@ async function context(request: Request) {
 }
 type Context = Awaited<ReturnType<typeof context>>;
 function parent(ctx: Context) {
-  if (
-    !ctx.current.parentUnlockedUntil ||
-    ctx.current.parentUnlockedUntil <= new Date()
-  )
-    throw new HttpError(403, "PARENT_UNLOCK_REQUIRED", "请先验证家长密码。");
+  if (!parentIsReady(ctx.current))
+    throw new HttpError(
+      403,
+      "PARENT_UNLOCK_REQUIRED",
+      "请先完成家长入口的小题目。",
+    );
 }
 async function owned(ctx: Context, id: string) {
   const [profile] = await db
@@ -148,21 +154,44 @@ export async function dispatch(request: Request, parts: string[]) {
         emailVerified: ctx.owner.emailVerified,
       },
       activeProfileId: ctx.current.activeProfileId,
-      parentUnlockedUntil: ctx.current.parentUnlockedUntil,
+      parentReady: parentIsReady(ctx.current),
+      parentUnlockedUntil: parentIsReady(ctx.current)
+        ? ctx.current.expiresAt
+        : null,
     };
+  if (route === "parent-challenge" && method === "GET") {
+    return createParentChallenge(
+      ctx.current,
+      process.env.BETTER_AUTH_SECRET || "",
+    );
+  }
   if (route === "parent-unlock" && method === "POST") {
     const body = z
-      .object({ password: z.string().min(1).max(128) })
+      .object({
+        challenge: z.string().min(1).max(1000),
+        answer: z.number().int().min(1).max(100),
+      })
       .strict()
       .parse(await jsonBody(request));
-    await auth.api.verifyPassword({ headers: request.headers, body });
-    const until = new Date(Date.now() + 15 * 60000);
+    if (
+      !verifyParentChallenge(
+        ctx.current,
+        body.challenge,
+        body.answer,
+        process.env.BETTER_AUTH_SECRET || "",
+      )
+    )
+      throw new HttpError(
+        400,
+        "PARENT_CHALLENGE_INCORRECT",
+        "没有答对，或题目已过期。请换一道题再试。",
+      );
     await db
       .update(session)
-      .set({ parentUnlockedUntil: until })
+      .set({ parentUnlockedUntil: ctx.current.expiresAt })
       .where(eq(session.id, ctx.current.id));
     await audit(ctx.owner.id, "parent.unlock", ctx.current.id);
-    return { parentUnlockedUntil: until };
+    return { parentReady: true, parentUnlockedUntil: ctx.current.expiresAt };
   }
   if (route === "parent-lock" && method === "POST") {
     await db
@@ -443,6 +472,7 @@ export async function dispatch(request: Request, parts: string[]) {
   }
 
   if (route === "export" && method === "GET") {
+    parent(ctx);
     await permission(ctx, "*", "data.export");
     const profiles = await db
       .select()

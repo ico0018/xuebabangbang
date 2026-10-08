@@ -12,6 +12,7 @@ type Session = {
   };
   activeProfileId: string | null;
   parentUnlockedUntil: string | null;
+  parentReady: boolean;
 };
 async function api(path: string, method = "GET", body?: unknown) {
   const response = await fetch("/api/v1/" + path, {
@@ -28,7 +29,12 @@ export function AccountCenter() {
   const [current, setCurrent] = useState<Session | null>(null),
     [profiles, setProfiles] = useState<Profile[]>([]),
     [message, setMessage] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [challenge, setChallenge] = useState<{
+      challenge: string;
+      question: string;
+      choices: number[];
+    } | null>(null);
   async function refresh() {
     const [s, p] = await Promise.all([api("session"), api("profiles")]);
     setCurrent(s);
@@ -52,18 +58,30 @@ export function AccountCenter() {
       setBusy(false);
     }
   }
-  const unlocked =
-    !!current?.parentUnlockedUntil &&
-    new Date(current.parentUnlockedUntil) > new Date();
-  async function unlock(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const password = String(new FormData(form).get("password"));
+  const unlocked = current?.parentReady === true;
+  async function loadChallenge() {
+    setBusy(true);
+    setMessage("");
+    try {
+      setChallenge(await api("parent-challenge"));
+    } catch (error) {
+      setMessage(
+        error instanceof Error ? error.message : "题目暂时无法读取，请重试。",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function unlock(answer: number) {
+    if (!challenge) return;
     await run(
-      () => api("parent-unlock", "POST", { password }),
-      "家长验证通过，15 分钟内可以管理档案和学习计划。",
+      () =>
+        api("parent-unlock", "POST", {
+          challenge: challenge.challenge,
+          answer,
+        }),
+      "家长入口已开启，本次登录期间无需重复答题。",
     );
-    form.reset();
   }
   async function add(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -126,7 +144,6 @@ export function AccountCenter() {
       });
       if (!response.ok)
         throw new Error("修改失败，请检查原密码，新密码至少 10 位。");
-      await api("parent-lock", "POST", {});
     }, "密码已更新，其他设备已退出。");
     form.reset();
   }
@@ -198,9 +215,7 @@ export function AccountCenter() {
               </div>
             </div>
           ))}
-          {!profiles.length && (
-            <p>账号已就绪，可以给孩子取一个昵称。</p>
-          )}
+          {!profiles.length && <p>账号已就绪，可以给孩子取一个昵称。</p>}
           <form onSubmit={add} className="account-form">
             <label>
               孩子昵称
@@ -224,60 +239,77 @@ export function AccountCenter() {
           </p>
         </section>
         <section className="account-card">
-          <h2>家长验证</h2>
+          <h2>家长入口</h2>
           <p>
             {unlocked
-              ? "管理权限已开启，15 分钟后自动锁定。"
-              : "管理孩子档案和修改学习计划前，请验证您的密码。"}
+              ? "家长入口已开启，本次登录期间无需重复答题。"
+              : "请家长做一道小题目，帮助孩子避免误点管理功能。"}
           </p>
-          <form onSubmit={unlock} className="account-form">
-            <label>
-              家长密码
-              <input
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                maxLength={128}
-              />
-            </label>
-            <button className="primary-button" disabled={busy}>
-              验证家长身份
-            </button>
-          </form>
-          {unlocked && (
-            <button
-              className="soft-button"
-              onClick={() =>
-                run(() => api("parent-lock", "POST", {}), "家长管理已锁定。")
-              }
-            >
-              立即锁定
-            </button>
-          )}
+          {!unlocked &&
+            (challenge ? (
+              <div className="account-form">
+                <p aria-live="polite">{challenge.question}</p>
+                <div className="account-actions" aria-label="选择计算结果">
+                  {challenge.choices.map((answer) => (
+                    <button
+                      key={answer}
+                      type="button"
+                      className="soft-button"
+                      disabled={busy}
+                      onClick={() => unlock(answer)}
+                    >
+                      {answer}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className="soft-button"
+                  disabled={busy}
+                  onClick={loadChallenge}
+                >
+                  换一道题
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="primary-button"
+                disabled={busy}
+                onClick={loadChallenge}
+              >
+                进入家长管理
+              </button>
+            ))}
           <h2>学习记录</h2>
           <p>选择孩子后，在对应工具中保存、恢复或迁移本机学习记录。</p>
           <div className="account-links">
             <a
               href={
-                process.env.NEXT_PUBLIC_GUWEN_URL ||
-                "https://guwen.xuebabangbang.cn"
+                (
+                  process.env.NEXT_PUBLIC_GUWEN_URL ||
+                  "https://guwen.xuebabangbang.cn"
+                ).replace(/\/$/, "") + "/parent.html"
               }
             >
               古文乐园 →
             </a>
             <a
               href={
-                process.env.NEXT_PUBLIC_HANZI_URL ||
-                "https://hanzi.xuebabangbang.cn"
+                (
+                  process.env.NEXT_PUBLIC_HANZI_URL ||
+                  "https://hanzi.xuebabangbang.cn"
+                ).replace(/\/$/, "") + "/parent.html"
               }
             >
               汉字乐园 →
             </a>
             <a
               href={
-                process.env.NEXT_PUBLIC_TASKHELPER_URL ||
-                "https://taskhelper.xuebabangbang.cn"
+                (
+                  process.env.NEXT_PUBLIC_TASKHELPER_URL ||
+                  "https://taskhelper.xuebabangbang.cn"
+                ).replace(/\/$/, "") + "/parent/"
               }
             >
               任务小帮手 →
@@ -379,9 +411,13 @@ export function AccountCenter() {
           <p>
             可下载自己的全部孩子档案和三个工具的云端记录，保存在您信任的设备中。
           </p>
-          <a className="primary-button" href="/api/v1/export" download>
-            下载我的学习记录
-          </a>
+          {unlocked ? (
+            <a className="primary-button" href="/api/v1/export" download>
+              下载我的学习记录
+            </a>
+          ) : (
+            <p className="muted">先开启家长入口，再导出或恢复学习记录。</p>
+          )}
           <details>
             <summary>从导出文件恢复到当前孩子</summary>
             <p>

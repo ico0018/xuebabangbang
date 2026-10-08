@@ -79,7 +79,7 @@ export function AdminCenter() {
     <div className="page-shell account-shell">
       <h1>平台管理</h1>
       <p>管理账号与运行状况。管理员不读取或修改孩子的学习内容。</p>
-      <Link href="/account">← 返回我的账号（写操作前请先家长验证）</Link>
+      <Link href="/account">← 返回我的账号（写操作前请先开启家长入口）</Link>
       <p role="status">{message}</p>
       {stats && (
         <section className="account-card">

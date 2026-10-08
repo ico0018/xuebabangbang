@@ -212,10 +212,89 @@ async function mail(email, subject) {
   results.push(
     "false + disabled mail: auto session, unverified DB state, server-only role, normalized duplicate and DB expression uniqueness, existing secure password hashing",
   );
+  const financialNumbers = [
+    "零",
+    "壹",
+    "贰",
+    "叁",
+    "肆",
+    "伍",
+    "陆",
+    "柒",
+    "捌",
+    "玖",
+  ];
+  const solve = (question) =>
+    financialNumbers.indexOf(question[0]) *
+    financialNumbers.indexOf(question[4]);
+  status(await call(a, "/api/v1/export"), 403);
+  const challengeResponse = await call(a, "/api/v1/parent-challenge");
+  status(challengeResponse, 200);
+  const challenge = challengeResponse.value,
+    correct = solve(challenge.question);
+  assert.equal(challenge.choices.length, 3);
+  assert.equal((await call(a, "/api/v1/session")).value.parentReady, false);
   status(
-    await call(a, "/api/v1/parent-unlock", { password: params.password }),
+    await call(a, "/api/v1/parent-unlock", {
+      challenge: challenge.challenge,
+      answer: challenge.choices.find((v) => v !== correct),
+    }),
+    400,
+  );
+  assert.equal((await call(a, "/api/v1/session")).value.parentReady, false);
+  status(
+    await call(a, "/api/v1/parent-unlock", {
+      challenge: challenge.challenge + "x",
+      answer: correct,
+    }),
+    400,
+  );
+  const otherLogin = session();
+  status(
+    await call(otherLogin, "/api/auth/sign-in/email", params, "198.51.100.8"),
     200,
   );
+  status(
+    await call(otherLogin, "/api/v1/parent-unlock", {
+      challenge: challenge.challenge,
+      answer: correct,
+    }),
+    400,
+  );
+  assert.equal(
+    (await call(otherLogin, "/api/v1/session")).value.parentReady,
+    false,
+  );
+  status(
+    await call(a, "/api/v1/parent-unlock", {
+      challenge: challenge.challenge,
+      answer: correct,
+    }),
+    200,
+  );
+  assert.equal((await call(a, "/api/v1/session")).value.parentReady, true);
+  status(await call(a, "/api/v1/export"), 200);
+  await client.query(
+    "UPDATE sessions SET parent_unlocked_until=now()-interval '16 minutes' WHERE user_id=(SELECT id FROM users WHERE email=$1) AND parent_unlocked_until IS NOT NULL",
+    [params.email],
+  );
+  assert.equal((await call(a, "/api/v1/session")).value.parentReady, true);
+  status(await call(a, "/api/v1/export"), 200);
+  const wrongAttempts = await Promise.all(
+    Array.from({ length: 3 }, () =>
+      call(a, "/api/v1/parent-unlock", {
+        challenge: challenge.challenge,
+        answer: challenge.choices.find((v) => v !== correct),
+      }),
+    ),
+  );
+  assert(wrongAttempts.some((r) => r.status === 429));
+  assert.equal((await call(a, "/api/v1/session")).value.parentReady, true);
+  status(await call(a, "/api/v1/export"), 200);
+  results.push(
+    "Server parent challenge: wrong/tampered/cross-login rejects, numeric choices, actual session grant survives past 16 minutes, concurrent attempts throttle, no password recheck",
+  );
+
   const p = await call(a, "/api/v1/profiles", { nickname: "免验证学习" });
   status(p, 200);
   const profile = p.value.id;
@@ -242,6 +321,8 @@ async function mail(email, subject) {
   status(await call(a, "/api/auth/sign-out", {}), 200);
   status(await call(a, "/api/v1/session"), 401);
   status(await call(a, "/api/auth/sign-in/email", params), 200);
+  assert.equal((await call(a, "/api/v1/session")).value.parentReady, false);
+
   assert.equal(
     (await call(a, "/api/v1/profiles/" + profile + "/state/guwen")).value
       .revision,

@@ -39,4 +39,6 @@ const server = createServer(async (req, res) => {
     res.end("Internal test server error");
   }
 });
-server.listen(18430, "127.0.0.1", () => console.log("AUTH_TEST_READY"));
+server.listen(Number(process.env.AUTH_TEST_PORT || 18430), "127.0.0.1", () =>
+  console.log("AUTH_TEST_READY"),
+);
