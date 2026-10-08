@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { auth } from "../../lib/auth";
 import { db } from "../../lib/db";
 import { user } from "../../lib/schema";
+import { hasVerifiedEmail } from "../../lib/auth-policy";
 import { AdminCenter } from "../../components/AdminCenter";
 export const dynamic = "force-dynamic";
 export default async function Page() {
@@ -13,7 +14,12 @@ export default async function Page() {
     .select()
     .from(user)
     .where(eq(user.id, value.user.id));
-  if (!owner || owner.disabled || owner.role !== "admin")
+  if (
+    !owner ||
+    owner.disabled ||
+    owner.role !== "admin" ||
+    !hasVerifiedEmail(owner)
+  )
     return (
       <div className="page-shell account-shell">
         <h1>仅管理员可访问</h1>

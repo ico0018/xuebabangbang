@@ -199,7 +199,7 @@ export function AccountCenter() {
             </div>
           ))}
           {!profiles.length && (
-            <p>邮箱已经验证，接下来给孩子取一个昵称就好。</p>
+            <p>账号已就绪，可以给孩子取一个昵称。</p>
           )}
           <form onSubmit={add} className="account-form">
             <label>
