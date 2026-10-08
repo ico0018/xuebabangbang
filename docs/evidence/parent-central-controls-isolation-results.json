@@ -1,0 +1,75 @@
+{
+  "status": "PASS",
+  "environment": "Actual Tencent isolated preview",
+  "checks": 6,
+  "results": [
+    "Six server snapshots across both child selections retain exact payload/revision/schema; nonempty records remain isolated and null cloud payload remains valid empty display",
+    "Both frames scrolled into viewport and actually painted; three controls visible with nonzero boxes; own-frame and viewport screenshots recorded"
+  ],
+  "rendered": {
+    "hanzi": {
+      "text": "云同步已完成\n当前孩子：快照甲\n导入本机游客记录\n重试同步\n导出备份",
+      "box": {
+        "x": 35,
+        "y": 541.890625,
+        "width": 305,
+        "height": 180
+      },
+      "buttons": [
+        {
+          "text": "导入本机游客记录",
+          "visibility": "visible",
+          "display": "block",
+          "width": 128.640625,
+          "height": 33
+        },
+        {
+          "text": "重试同步",
+          "visibility": "visible",
+          "display": "block",
+          "width": 75.328125,
+          "height": 33
+        },
+        {
+          "text": "导出备份",
+          "visibility": "visible",
+          "display": "block",
+          "width": 75.328125,
+          "height": 33
+        }
+      ]
+    },
+    "guwen": {
+      "text": "云同步已完成\n当前孩子：快照甲\n导入本机游客记录\n重试同步\n导出备份",
+      "box": {
+        "x": 35,
+        "y": 663.78125,
+        "width": 305,
+        "height": 180
+      },
+      "buttons": [
+        {
+          "text": "导入本机游客记录",
+          "visibility": "visible",
+          "display": "block",
+          "width": 128.640625,
+          "height": 33
+        },
+        {
+          "text": "重试同步",
+          "visibility": "visible",
+          "display": "block",
+          "width": 75.328125,
+          "height": 33
+        },
+        {
+          "text": "导出备份",
+          "visibility": "visible",
+          "display": "block",
+          "width": 75.328125,
+          "height": 33
+        }
+      ]
+    }
+  }
+}

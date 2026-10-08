@@ -73,3 +73,11 @@ TRUSTED_PROXY_SECRET 是服务端与回环Nginx共享的随机32位以上私密�
 四个最终feature分支业务归档与taskhelper静态产物均按SHA256核验后部署，环境配置、Nginx、数据库结构及rootless/ubuntu架构不变。部署前保留数据库备份、原应用image和四仓库原归档；运行库账号/孩子/学习状态完整摘要在替换前后相同，生产主页摘要也相同。当前清单为 artifacts/manifest.json 与 parent-release.json；结果见 docs/evidence/parent-release-results.json。后续纯文档提交独立记录。
 
 新家长检查入口：账号 localhost:8320/account、汉字 localhost:8321/parent.html、古文 localhost:8322/parent.html、任务 localhost:8323/parent/。原学生入口不变，记录同步/备份/恢复只显示于家长页。SSH本地连接已恢复，所有监听仅在127.0.0.1；没有新公网端口。无新增迁移，回滚仅需旧image和静态归档，详见 unified-parent-controls.md。
+
+## 集中家长记录面板追加部署（2026-10-08）
+
+新检查入口为 http://localhost:8323/parent/，汉字8321与古文8322的学习页已移除全部家长入口。两来源parent.html?embedded=1仅由中央Task家长页嵌入；预览Nginx两条精确location增加frame-ancestors http://localhost:8323。使用原文件备份进行定点补充，nginx -t成功后reload，其他生产server块/端口/秘密保持。
+
+本次只替换三个静态源与Task静态构建，不执行账号镜像重建、容器重启或数据库迁移。归档SHA逐项验证，部署前后数据库完整业务数据与应用image相同，原站主页摘要不变。私有 parent-central-review/rollback保存此前三个归档、Taskout、两cloud-config和原预览Nginx文件；回滚只恢复这些静态产物和预览Nginx，并先检查再reload，不覆盖用户数据。
+
+实际来源/备份/部署与浏览器证据见 unified-parent-central-controls.md、unified-parent-central-qa.md 及 docs/evidence/central-release-results.json。状态：READY FOR OWNER REVIEW；main/dev/DNS与生产数据库未改，全部Draft PR未合并，未授权上线。

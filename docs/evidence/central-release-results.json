@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "sources": [
+    {
+      "repo": "taskhelper",
+      "branch": "feature/unified-user-system",
+      "commit": "9e9c98bbb8f9059a471451116cbbed86985dc08b",
+      "sha256": "bf3b842c934dfe680d1f291e01220bea314f962daf998e36786174b9a12ba260"
+    },
+    {
+      "repo": "hanzi",
+      "branch": "feature/unified-user-system",
+      "commit": "5af788877c523fa2b0e563ae171845aee3fce3f9",
+      "sha256": "39203c92ce909a01db0b043c63f72025b32e2ec1fbc8f76c64d47e029c4fdd83"
+    },
+    {
+      "repo": "guwen",
+      "branch": "feature/unified-user-system",
+      "commit": "d9fcc04e721ff89e1333cea3915e89e270c965fb",
+      "sha256": "04e72f0aca18359dc87e8c8214b27dc5da3a14ba95fc95e454413befd93dfc64"
+    },
+    {
+      "repo": "taskhelper-out",
+      "branch": "feature/unified-user-system",
+      "commit": "9e9c98bbb8f9059a471451116cbbed86985dc08b",
+      "sha256": "2052138715fb42469dad8b23e344d30c366596d4afaefb984c38119f71308b38"
+    }
+  ],
+  "appImageUnchanged": "sha256:60c4365bf757b85fd55c382164f5338bda5f3d02f26c0a873a711664371b60f0",
+  "databaseUnchanged": true,
+  "databaseSHA256": "5ed4a9b04bdbf33caba9bfe130c5b5f0791d1e10edbd79093baad07553cd1e26",
+  "productionUnchanged": true,
+  "productionSHA256": "05c355b6bf439819fc155d2508da24451bd96ddb1f8a7f4d18f2b074c4de84c5",
+  "nginxPreviewOnly": true,
+  "frameAncestors": "http://localhost:8323",
+  "publicPortsAdded": false
+}

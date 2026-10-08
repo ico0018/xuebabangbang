@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "environment": "Actual Tencent isolated preview through existing localhost tunnel",
+  "at": "2026-10-08T10:25:55.891Z",
+  "results": [
+    "375/768/1440: Hanzi/Guwen student DOM has no parent entry or record tools; background storage still starts; central actual own-origin widgets have one child/mode selector and no repeated gate",
+    "Both central widgets import their own-origin guest storage into cloud and directly download backups; original local keys are retained",
+    "Conflict choices are actual central widget buttons; downloaded backup preserves both candidates and recovery preserves original guest keys",
+    "Single central child selection refreshes both own-origin widgets; the other child retains its pre-import learning baseline and switching back restores both tools",
+    "Central explicit exit clears server grant and widgets; direct embedded parameter cannot bypass a signed lock",
+    "Logout/new login and a forged activation postMessage cannot grant signed parent readiness or export",
+    "Actual guest central arithmetic gate activates both embedded export panels without repeated questions; one exit removes them",
+    "Actual static parent responses permit framing only under the configured central parent CSP"
+  ],
+  "browserErrors": [],
+  "framePolicies": {
+    "http://localhost:8321": "frame-ancestors http://localhost:8323",
+    "http://localhost:8322": "frame-ancestors http://localhost:8323"
+  }
+}

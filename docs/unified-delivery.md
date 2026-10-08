@@ -11,13 +11,17 @@
 | 仓库           | 已实现                                                                           | 已验证的功能提交                                                                           | 草稿 PR                                                       |
 | -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
 | xuebabangbang  | 统一认证、账号中心、多孩子、管理员、云 API、迁移、隔离 Docker/Nginx/COS/备份配置 | 81abd4a89b9f37295c7e8c5c3aa64940b8a5eb61（运行镜像业务来源；后续为文档证据提交） | [PR #3](https://github.com/ico0018/xuebabangbang/pull/3)      |
-| AdhdTaskHelper | Repository + CloudSyncAdapter、算式家长入口、孩子独立缓存与离线记录              | aeded818f3efb716624257b354cb9624c148669e                                                   | [PR #3](https://github.com/ico0018/AdhdTaskHelper/pull/3)     |
-| hanzi_garden   | 静态生字掌握/听写进度及队列同步                                                  | ffaa0b705497b2371889f5a3783c7bc5aa5dc77f                                                   | [PR #4 → dev](https://github.com/ico0018/hanzi_garden/pull/4) |
-| guwen_leyuan   | 静态阅读/学习/默写记录同步                                                       | 16e652916600247c34d7187939e4cb93a1405f2a                                                   | [PR #1](https://github.com/ico0018/guwen_leyuan/pull/1)       |
+| AdhdTaskHelper | Repository + CloudSyncAdapter、算式家长入口、孩子独立缓存与离线记录              | 9e9c98bbb8f9059a471451116cbbed86985dc08b                                                   | [PR #3](https://github.com/ico0018/AdhdTaskHelper/pull/3)     |
+| hanzi_garden   | 静态生字掌握/听写进度及队列同步                                                  | 5af788877c523fa2b0e563ae171845aee3fce3f9                                                   | [PR #4 → dev](https://github.com/ico0018/hanzi_garden/pull/4) |
+| guwen_leyuan   | 静态阅读/学习/默写记录同步                                                       | d9fcc04e721ff89e1333cea3915e89e270c965fb                                                   | [PR #1](https://github.com/ico0018/guwen_leyuan/pull/1)       |
 
 认证、用户/数据、工具同步和基础设施分别提交。草稿不代表发布许可。汉字沿用仓库 dev 门禁，其余PR指向main但保持草稿；没有任何合并。
 
-## 家长入口与记录管理简化
+## 集中家长面板追加交付
+
+用户明确选择任务小帮手家长端。汉字和古文学生页面零家长入口，原来源记录按钮直接嵌入Taskhelper /parent/；后台云同步和学习规则保留。三个静态业务提交已部署，Portal镜像/数据库不变。独立13本地检查与375/768/1440云浏览器实测PASS，准备人工验收。详见 [集中面板与回滚](unified-parent-central-controls.md)、[独立验收](unified-parent-central-qa.md)、`evidence/central-release-results.json`。
+
+## 家长入口与记录管理简化（此前阶段）
 
 最新四个业务提交已部署，独立云端八组浏览器验收与八组认证/API回归PASS。汉字算式三选一开启当前登录的家长操作；取消重复密码和15分钟锁定，记录管理仅在家长页。没有新增数据库迁移或修改原学习数据。原管理员仍可登录；原站与数据摘要不变。当前 image 为 `sha256:60c4365bf757b85fd55c382164f5338bda5f3d02f26c0a873a711664371b60f0`。详见 [本轮改动与回滚](unified-parent-controls.md)、[独立验收](unified-parent-qa.md) 与 `evidence/parent-*.json`。后续纯文档提交不改变表内业务来源。
 
@@ -54,7 +58,7 @@
 
 保留各工具独立结构及游客localStorage原键。登录缓存按账号和孩子隔离；游客迁移在各工具自己的origin中明确确认，原数据不删除。即时保存本机，云端异步；未上传修改持久保存，断网/Session失效不能显示同步成功。双方不同记录需要选择，保留恢复副本和双份导出。数据相等比较兼容PostgreSQL JSONB键序。
 
-任务小帮手的计时、自检、复盘、积分和模板原逻辑保留。汉字教材、古文目录和默写判定没有修改。游客家长PIN只提供当前浏览器的保护，账号模式才有服务端密码授权，界面与文档明确说明。
+任务小帮手的计时、自检、复盘、积分和模板原逻辑保留。汉字教材、古文目录和默写判定没有修改。游客家长算式只提供当前浏览器的误点保护，账号模式使用当前登录的服务端parentReady授权，界面与文档明确说明。
 
 ## 实际验证结果
 
