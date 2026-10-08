@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "reports": [
+    {
+      "file": "index.html",
+      "absoluteReferences": 13,
+      "pathPrefix": "PASS"
+    },
+    {
+      "file": "parent/index.html",
+      "absoluteReferences": 12,
+      "pathPrefix": "PASS"
+    }
+  ],
+  "compiledPublicPrefixes": "PASS"
+}
