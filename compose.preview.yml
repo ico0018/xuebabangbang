@@ -1,0 +1,50 @@
+name: xueba-unified-preview
+services:
+  db:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: xueba_preview
+      POSTGRES_USER: xueba
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a random preview database password}
+    volumes:
+      - preview-db:/var/lib/postgresql/data
+    mem_limit: 512m
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U xueba -d xueba_preview"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  app:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_HANZI_URL: http://localhost:8321/
+        NEXT_PUBLIC_GUWEN_URL: http://localhost:8322/
+        NEXT_PUBLIC_TASKHELPER_URL: http://localhost:8323/
+    restart: unless-stopped
+    env_file: .env.preview
+    environment:
+      DATABASE_URL: postgresql://xueba:${POSTGRES_PASSWORD}@db:5432/xueba_preview
+    ports:
+      - "127.0.0.1:3200:3000"
+    volumes:
+      - preview-mail:/app/mail-outbox
+    mem_limit: 768m
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          'fetch("http://127.0.0.1:3000/api/health").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))',
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+volumes:
+  preview-db:
+  preview-mail:

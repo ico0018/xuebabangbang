@@ -1,0 +1,8 @@
+[Unit]
+Description=Back up isolated Xueba preview database to private COS
+[Service]
+Type=oneshot
+User=ubuntu
+WorkingDirectory=/srv/xuebabangbang-unified-preview/portal
+ExecStart=/bin/bash ops/backup.sh
+NoNewPrivileges=true

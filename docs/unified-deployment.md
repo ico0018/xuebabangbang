@@ -1,0 +1,54 @@
+# 统一用户系统：隔离部署与回滚
+
+## 部署边界
+
+只部署四仓库的 `feature/unified-user-system`。不合并 main、不修改 Cloudflare/DNS、不触碰原站服务和数据库。腾讯云新环境固定在 `/srv/xuebabangbang-unified-preview`，Compose 项目名 `xueba-unified-preview`。数据库没有宿主机端口；账号中心监听 `127.0.0.1:3200`，Nginx 测试入口监听本机 8320–8323。
+
+本地 PostgreSQL 和浏览器测试不能替代腾讯云部署、COS或SMTP实测。各项真实结果单独记录在交付报告。
+
+## 首次部署
+
+1. SSH检查 Ubuntu、现有服务、磁盘内存、Docker 与端口占用；保留 `/srv/xuebabangbang`、`/var/www` 和现有 Nginx 配置。
+2. 上传四个分支的完整归档到新目录，记录四个完整提交号。原始 Git、环境文件和测试邮件不发布到静态目录。
+3. 使用官方 Docker Ubuntu安装方式安装Docker Engine及Compose插件（已安装时不重装）。不改现有防火墙，不开放5432。
+4. 主站复制 `.env.example` 为 `.env.preview`，随机生成独立数据库密码及 Better Auth secret，权限0600；配置四个 localhost 8320–8323 为 trusted origin。开发邮件需显式 `MAIL_PROVIDER=development`、`ENABLE_DEV_MAIL=true`、`DEV_MAIL_DIR=/app/mail-outbox`。这只会写私有测试邮件，真实外部邮件须SMTP。
+5. 汉字、古文静态配置的 API/账号中心使用 localhost:8320；任务工具以对应环境变量构建，主站三个工具链接指向8321/8322/8323。正式域名入口保留在原站。
+6. 主站执行 `bash ops/deploy-preview.sh`。复制独立 `ops/nginx.preview.conf` 到 `/etc/nginx/conf.d/xueba-unified-preview.conf`，`nginx -t`成功后只reload Nginx，不替换原站块。
+7. 使用 SSH 本地转发打开测试入口。所有认证请求经过SSH，不在公网HTTP提交密码。正式运行仍必须HTTPS，Secure+HttpOnly Cookie及严格CORS。
+
+## 人工检查入口
+
+有OpenSSH客户端时：
+
+```sh
+ssh -N -L 8320:127.0.0.1:8320 -L 8321:127.0.0.1:8321 -L 8322:127.0.0.1:8322 -L 8323:127.0.0.1:8323 ubuntu@134.175.136.31
+```
+
+- http://localhost:8320/ 主站、注册登录、账号与管理
+- http://localhost:8321/ 汉字乐园
+- http://localhost:8322/ 古文乐园
+- http://localhost:8323/ 任务小帮手
+
+请统一用 localhost，不混用127.0.0.1，Cookie按主机而非端口共享。游客旧记录在其原origin内，测试origin无法读取原HTTPS站的历史，不代表数据被删除。
+
+## COS与备份
+
+`COS_BUCKET`、`COS_REGION`必须真实核查；Bucket维持私有。优先CAM实例角色；否则显式配置STS临时凭证和有效期，拒绝已过期凭证。内网仅在 `TENCENT_SERVER_REGION` 确认与Bucket相同且 `COS_INTERNAL=true` 时启用，并实测路由可达。
+
+```sh
+docker compose --env-file .env.preview -f compose.preview.yml run --rm app node ops/cos.cjs test
+bash ops/backup.sh
+bash ops/restore-drill.sh backups/实际文件.dump
+```
+
+COS测试只删除当次脚本自己生成的唯一diagnostics文件；备份脚本不清理任何对象。恢复演练创建新的restore_drill数据库，保留供检查，不覆盖运行库。应在没有新写入的预览维护窗口立即比较备份与恢复的表行数；比较失败不能报告通过。生产恢复需要另外的明确授权与停写方案。
+
+确认COS和恢复演练通过后才安装启用 `xueba-preview-backup.service/.timer`，默认北京时间每天03:30。备份日志失败由systemd记录；需要实际核验定时任务状态，不把配置文件存在当成启用成功。
+
+## 回滚
+
+未合并 main 的分支测试可以停止独立 `xueba-unified-preview` 的 app 容器、恢复上一个测试归档/镜像。不要执行 `down -v`，保留数据库volume、私有邮件、备份和四站原目录。迁移只向前执行，数据库回滚须在新隔离库恢复经过验证的备份并指向该库。删除单独的Nginx测试配置前保存备份，验证成功后reload；原站配置始终保留。
+
+## 配置与上线前检查
+
+SSH凭证、COS与SMTP若尚未提供，部署和对应实测必须标记未完成。首个管理员只能由服务器脚本对已验证邮箱提权，不创建默认管理员或弱密码。大陆服务器正式切换前需核实备案及腾讯云接入备案；当前IP可达不等于备案已核实。正式域名TLS及DNS切换在人工验收后另行授权。
