@@ -30,7 +30,8 @@ export const tools: Tool[] = [
     icon: "诗",
     tags: ["古诗", "古文", "默写", "小学"],
     status: "online",
-    href: "https://guwen.xuebabangbang.cn/",
+    href:
+      process.env.NEXT_PUBLIC_GUWEN_URL || "https://guwen.xuebabangbang.cn/",
     illustration: "scroll",
     color: "green",
     steps: ["选年级和课文", "听读、理解句子", "练习默写"],
@@ -47,7 +48,8 @@ export const tools: Tool[] = [
     icon: "字",
     tags: ["生字", "笔顺", "课本", "小学"],
     status: "online",
-    href: "https://hanzi.xuebabangbang.cn/",
+    href:
+      process.env.NEXT_PUBLIC_HANZI_URL || "https://hanzi.xuebabangbang.cn/",
     illustration: "character",
     color: "yellow",
     steps: ["选教材和课次", "看笔顺、练写字", "听写检查"],
@@ -64,14 +66,20 @@ export const tools: Tool[] = [
     icon: "✓",
     tags: ["计划", "计时", "检查", "复盘"],
     status: "online",
-    href: "https://taskhelper.xuebabangbang.cn/",
+    href:
+      process.env.NEXT_PUBLIC_TASKHELPER_URL ||
+      "https://taskhelper.xuebabangbang.cn/",
     illustration: "checklist",
     color: "blue",
     steps: ["家长添加任务", "孩子选时间开始", "做完自己检查"],
     action: "开始任务",
     secondaryAction: {
       label: "家长设置任务",
-      href: "https://taskhelper.xuebabangbang.cn/parent/",
+      href:
+        (
+          process.env.NEXT_PUBLIC_TASKHELPER_URL ||
+          "https://taskhelper.xuebabangbang.cn"
+        ).replace(/\/$/, "") + "/parent/",
     },
     external: true,
     featured: true,
