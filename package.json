@@ -11,7 +11,8 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "db:generate": "drizzle-kit generate",
     "test": "tsx --test tests/*.test.ts",
-    "admin:promote": "tsx scripts/admin.ts"
+    "admin:promote": "tsx scripts/admin.ts",
+    "test:auth-integration": "node scripts/test-auth-integration.mjs"
   },
   "dependencies": {
     "better-auth": "^1.7.7",

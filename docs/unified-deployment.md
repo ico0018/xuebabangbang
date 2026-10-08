@@ -60,3 +60,9 @@ SSH凭证、COS与SMTP若尚未提供，部署和对应实测必须标记未完�
 当前COS缺配置，明确使用独立systemd drop-in Environment=BACKUP_TARGET=local；ops/backup.sh默认cos仍要求真实COS成功。每天03:30后加0–300秒，本地备份实测Result=success/exit0。该模式仅本地备份，不称异地备份。未来提供COS后移除local目标覆盖并实测cos模式后才改变报告状态。环境文件0600、backups0700/dump0600、mail-outbox0700且文件0600。
 
 真实11表重启及新库恢复哈希匹配结果见unified-delivery.md和docs/evidence。人工检查入口、私有测试信箱及随机测试账号保存在本机unified目录，秘密不在Git。
+
+## 早期免验证注册配置
+
+详见 unified-registration.md。独立预览显式 REQUIRE_EMAIL_VERIFICATION=false，MAIL_PROVIDER=disabled，ENABLE_DEV_MAIL=false；缺省验证仍为true。部署前备份测试数据库和旧镜像，只执行新增0001兼容迁移。生产不执行。
+
+TRUSTED_PROXY_SECRET 是服务端与回环Nginx共享的随机32位以上私密口令，存于0600 .env.preview；不提交Git。私有 /etc/nginx/snippets/xueba-unified-preview-proxy.conf 必须由部署者生成（0600）：设置 proxy_set_header X-Xbb-Proxy-Secret 为相同口令，以及 proxy_set_header X-Xbb-Client-Ip $remote_addr。仓库预览Nginx配置在所有API代理位置include该文件，必须先创建再 nginx -t/reload。仅覆盖单独预览块；不调整正式站/防火墙。错误或未配代理凭据时使用共享限流桶，不相信浏览器传入的地址。

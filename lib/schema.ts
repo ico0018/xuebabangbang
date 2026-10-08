@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -10,18 +11,29 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 const date = (name: string) => timestamp(name, { withTimezone: true });
-export const user = pgTable("users", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").notNull().default(false),
-  image: text("image"),
-  createdAt: date("created_at").notNull().defaultNow(),
-  updatedAt: date("updated_at").notNull().defaultNow(),
-  role: text("role").notNull().default("user"),
-  disabled: boolean("disabled").notNull().default(false),
-  lastLoginAt: date("last_login_at"),
-});
+export const user = pgTable(
+  "users",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    email: text("email").notNull().unique(),
+    emailVerified: boolean("email_verified").notNull().default(false),
+    emailVerificationExempt: boolean("email_verification_exempt")
+      .notNull()
+      .default(false),
+    image: text("image"),
+    createdAt: date("created_at").notNull().defaultNow(),
+    updatedAt: date("updated_at").notNull().defaultNow(),
+    role: text("role").notNull().default("user"),
+    disabled: boolean("disabled").notNull().default(false),
+    lastLoginAt: date("last_login_at"),
+  },
+  (t) => [
+    uniqueIndex("users_email_normalized_unique").on(
+      sql`lower(btrim(${t.email}))`,
+    ),
+  ],
+);
 export const session = pgTable("sessions", {
   id: text("id").primaryKey(),
   token: text("token").notNull().unique(),

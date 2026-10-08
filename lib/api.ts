@@ -18,6 +18,7 @@ import {
   requiresParent,
   canOperate,
 } from "./policy";
+import { hasVerifiedEmail } from "./auth-policy";
 import { validatePayload } from "./payload";
 export class HttpError extends Error {
   constructor(
@@ -144,6 +145,7 @@ export async function dispatch(request: Request, parts: string[]) {
         email: ctx.owner.email,
         name: ctx.owner.name,
         role: ctx.owner.role,
+        emailVerified: ctx.owner.emailVerified,
       },
       activeProfileId: ctx.current.activeProfileId,
       parentUnlockedUntil: ctx.current.parentUnlockedUntil,
@@ -260,14 +262,12 @@ export async function dispatch(request: Request, parts: string[]) {
           .update(session)
           .set({ activeProfileId: null })
           .where(eq(session.activeProfileId, profile.id));
-        await tx
-          .insert(auditLogs)
-          .values({
-            id: crypto.randomUUID(),
-            actorId: ctx.owner.id,
-            action: "profile.delete",
-            targetId: profile.id,
-          });
+        await tx.insert(auditLogs).values({
+          id: crypto.randomUUID(),
+          actorId: ctx.owner.id,
+          action: "profile.delete",
+          targetId: profile.id,
+        });
       });
       return { ok: true };
     }
@@ -337,27 +337,23 @@ export async function dispatch(request: Request, parts: string[]) {
                     toolKey: tool,
                   })
                   .returning();
-            await tx
-              .insert(syncEvents)
-              .values({
-                id: crypto.randomUUID(),
-                userId: ctx.owner.id,
-                toolKey: tool,
-                success: true,
-                code: "OK",
-              });
-            return state;
-          });
-        } catch (error) {
-          await db
-            .insert(syncEvents)
-            .values({
+            await tx.insert(syncEvents).values({
               id: crypto.randomUUID(),
               userId: ctx.owner.id,
               toolKey: tool,
-              success: false,
-              code: error instanceof HttpError ? error.code : "FAILED",
+              success: true,
+              code: "OK",
             });
+            return state;
+          });
+        } catch (error) {
+          await db.insert(syncEvents).values({
+            id: crypto.randomUUID(),
+            userId: ctx.owner.id,
+            toolKey: tool,
+            success: false,
+            code: error instanceof HttpError ? error.code : "FAILED",
+          });
           throw error;
         }
         return {
@@ -434,15 +430,13 @@ export async function dispatch(request: Request, parts: string[]) {
               .returning();
         states.push({ toolKey: saved.toolKey, revision: saved.revision });
       }
-      await tx
-        .insert(auditLogs)
-        .values({
-          id: crypto.randomUUID(),
-          actorId: ctx.owner.id,
-          action: "data.import",
-          targetId: profile.id,
-          detail: { tools: body.states.map((s) => s.toolKey) },
-        });
+      await tx.insert(auditLogs).values({
+        id: crypto.randomUUID(),
+        actorId: ctx.owner.id,
+        action: "data.import",
+        targetId: profile.id,
+        detail: { tools: body.states.map((s) => s.toolKey) },
+      });
       return states;
     });
     return { ok: true, states: result };
@@ -488,7 +482,7 @@ export async function dispatch(request: Request, parts: string[]) {
     );
   }
   if (parts[0] === "admin") {
-    if (ctx.owner.role !== "admin")
+    if (ctx.owner.role !== "admin" || !hasVerifiedEmail(ctx.owner))
       throw new HttpError(403, "ADMIN_REQUIRED", "仅管理员可以访问。");
     if (route === "admin/users" && method === "GET") {
       const search = (new URL(request.url).searchParams.get("q") || "").slice(
@@ -587,14 +581,12 @@ export async function dispatch(request: Request, parts: string[]) {
               .where(eq(user.id, target.id));
           if (body.action !== "restore")
             await tx.delete(session).where(eq(session.userId, target.id));
-          await tx
-            .insert(auditLogs)
-            .values({
-              id: crypto.randomUUID(),
-              actorId: ctx.owner.id,
-              action: "admin." + body.action,
-              targetId: target.id,
-            });
+          await tx.insert(auditLogs).values({
+            id: crypto.randomUUID(),
+            actorId: ctx.owner.id,
+            action: "admin." + body.action,
+            targetId: target.id,
+          });
         });
         return { ok: true };
       }

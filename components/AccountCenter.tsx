@@ -3,7 +3,13 @@ import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 type Profile = { id: string; nickname: string; grade: string | null };
 type Session = {
-  user: { id: string; email: string; name: string; role: string };
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    emailVerified: boolean;
+  };
   activeProfileId: string | null;
   parentUnlockedUntil: string | null;
 };
@@ -139,6 +145,12 @@ export function AccountCenter() {
           </Link>
         )}
       </div>
+      {!current.user.emailVerified && (
+        <p className="muted">
+          邮箱尚未验证，学习功能可正常使用。确认邮箱归属需通过邮箱重置密码。
+          <Link href="/forgot-password">通过邮箱确认</Link>
+        </p>
+      )}
       <p className="feedback" role="status">
         {message}
       </p>

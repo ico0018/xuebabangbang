@@ -17,6 +17,10 @@
 
 认证、用户/数据、工具同步和基础设施分别提交。草稿不代表发布许可。汉字沿用仓库 dev 门禁，其余PR指向main但保持草稿；没有任何合并。
 
+## 注册机制优化
+
+正在实施2026-10-08免验证注册优化。新机制、兼容迁移、安全边界和最终证据见 [unified-registration.md](unified-registration.md)。以下第一阶段邮箱流程属于历史验证记录，最终预览配置以注册优化记录为准。
+
 ## 账号和权限
 
 提供 `/register`、`/login`、`/forgot-password`、`/reset-password`、`/account`、`/admin`。Better Auth官方密码认证、邮箱验证和重置负责密码协议，Session在PostgreSQL；HttpOnly Cookie，HTTPS时Secure，14天有效期，数据库限流，明确Origin/CORS。认证token不放localStorage。远程认证强制HTTPS，HTTP仅允许本机SSH转发的localhost预览。
