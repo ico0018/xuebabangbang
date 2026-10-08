@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isDeepStrictEqual } from "node:util";
 export const toolKeys = ["guwen", "hanzi", "taskhelper"] as const;
 export const profileInput = z
   .object({
@@ -22,7 +23,7 @@ function list(v: unknown): Record<string, unknown>[] {
   return Array.isArray(v) ? v.map(object) : [];
 }
 function same(a: unknown, b: unknown) {
-  return JSON.stringify(a) === JSON.stringify(b);
+  return isDeepStrictEqual(a, b);
 }
 function todayShanghai() {
   const parts = new Intl.DateTimeFormat("en-CA", {
