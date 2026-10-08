@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "environment": "Independent local execution against exact feature commits",
+  "commits": {
+    "taskhelper": "9e9c98bbb8f9059a471451116cbbed86985dc08b",
+    "hanzi": "5af788877c523fa2b0e563ae171845aee3fce3f9",
+    "guwen": "d9fcc04e721ff89e1333cea3915e89e270c965fb"
+  },
+  "independentChecks": 13,
+  "taskhelper": {
+    "tests": 43,
+    "cloudTests": 11,
+    "lint": "PASS",
+    "typecheck": "PASS"
+  },
+  "hanzi": {
+    "parentUiTests": 8,
+    "cloudTests": 11,
+    "syntax": "PASS",
+    "originalWordBank": "PASS"
+  },
+  "guwen": {
+    "parentUiTests": 8,
+    "cloudTests": 11,
+    "syntax": "PASS"
+  },
+  "coverage": [
+    "Student DOM removal with active cloud storage",
+    "Exact trusted origin/source/type-only guest activation",
+    "Signed-lock immunity and initialization race",
+    "No duplicate embedded child selector/mode exit",
+    "Central geometry messages reject action/records/URLs",
+    "Explicit inline confirmation executes; cancel does not execute; no window.confirm dependency"
+  ],
+  "cloudBrowserGate": "PASS",
+  "boundary": "Portal business unchanged; no additional portal/SMTP/COS recovery retest. No deployment, merge or SSH by QA.",
+  "cloudBrowserEvidence": "parent-central-controls-browser-results.json",
+  "cloudFocusedEvidence": "parent-central-controls-isolation-results.json"
+}

@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "environment": "Independent local candidate and public build artifact checks",
+  "commits": {
+    "portal": "0a67d2cdb4155a1726853e8bdba476846a42e820",
+    "portalBusinessBuild": "fa06078dd7ff780894e03e72a26cf6aa96fcc51f",
+    "taskhelper": "97ea36104b4bd696571411e17086000c44f009ad",
+    "hanzi": "456fb6027fbb87b6d008c7a77e373cd9a687305e",
+    "hanziBusiness": "5af788877c523fa2b0e563ae171845aee3fce3f9",
+    "guwen": "d9fcc04e721ff89e1333cea3915e89e270c965fb"
+  },
+  "independentChecks": {
+    "publicPathHttpsProxyHost": 4,
+    "parentMessagesAndControls": 13
+  },
+  "portal": {
+    "independentBusinessTests": 19,
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "finalOpsHostGuard": "PASS",
+    "developerFinalTests": 20
+  },
+  "taskhelper": {
+    "tests": 45,
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "cloudTests": 11
+  },
+  "staticTools": {
+    "eachParentUiTests": 8,
+    "eachCloudTests": 11
+  },
+  "artifactEvidence": "public-ip-artifact-results.json",
+  "publicBrowserGate": "BLOCKED: Windows exterior public443 navigation timeout; no HTTP/TLS response",
+  "boundary": "Local source/artifact PASS. No public fixtures, authentication writes, SSH, deployment or merge by QA. External browser TLS and functionality remain unverified.",
+  "readOnlyProbeEvidence": "public-ip-readonly-probe-results.json"
+}

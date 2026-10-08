@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Existing verified review administrator signs in with original password",
+    "Original review child retained and admin stats available",
+    "Export refused before math, available after math with current logged-in owner",
+    "Three deployed parent pages reachable through existing SSH tunnel"
+  ],
+  "databaseMigration": false,
+  "credentialsPrinted": false
+}

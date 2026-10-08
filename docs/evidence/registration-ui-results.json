@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "environment": "actual Tencent SSH preview; verification false + disabled mail",
+  "results": [
+    "Register and login fit 320/390/768/1440 viewport widths",
+    "Mobile inline email checks, confirmation mismatch, show/hide, one signup submit, automatic authenticated return to Hanzi, honest unverified state",
+    "Normalized duplicate rejection, no SMTP explicit recovery-disabled response, email change/admin deny, mobile logout/login automatically returns to Guwen",
+    "Existing verified owner administrator can sign in, use admin API and retain previous child profile; mobile admin layout fits"
+  ],
+  "browserErrors": []
+}

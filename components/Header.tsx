@@ -30,6 +30,7 @@ export function Header() {
         <nav className="main-nav" aria-label="主导航">
           <Link href="/#tools">工具</Link>
           <Link href="/about">为什么做</Link>
+          <Link href="/account">我的账号</Link>
           <Link href="/#community">进群提建议</Link>
         </nav>
       </div>

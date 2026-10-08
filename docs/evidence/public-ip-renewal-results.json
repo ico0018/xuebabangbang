@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "certbotVersion": "certbot 5.8.0",
+  "dryRun": "PASS",
+  "deployHook": "Nginx config test and reload passed",
+  "user": "ubuntu",
+  "service": "success",
+  "timerEnabled": true,
+  "schedule": "03:12 and 15:12 Asia/Shanghai; randomized up to 10 min",
+  "certificate": "notBefore=Oct  8 12:56:41 2026 GMT\nnotAfter=Oct 15 04:56:40 2026 GMT\nX509v3 Subject Alternative Name: critical\n    IP Address:134.175.136.31\n",
+  "publicBrowserConnectivity": "BLOCKED; exterior TCP443 timeout"
+}

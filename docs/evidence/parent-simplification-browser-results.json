@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "environment": "Tencent isolated preview through localhost SSH tunnel",
+  "base": "http://localhost:8320",
+  "results": [
+    "Registration preserves immediate unverified session; actual Chinese three-choice gate creates two children without a repeated password",
+    "375/768/1440px: student pages have no sync/export/import/conflict tools; same-origin parent pages use current grant without another quiz/password",
+    "Actual parent task creation reaches cloud and remains visible on uncluttered student home",
+    "Browser clock advanced17minutes: same login parent page remains open without another gate",
+    "Same-origin parent guest import preserves legacy localStorage; conflict export contains both versions and explicit cloud restore loses neither history nor cloud state",
+    "Two child records remain isolated and switching back restores the original cloud history",
+    "Other account cannot read/write any child tool state and ordinary unverified account cannot access admin",
+    "New login clears gate; one arithmetic answer reopens parent and original cloud task remains"
+  ],
+  "browserErrors": []
+}

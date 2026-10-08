@@ -1,0 +1,9 @@
+{
+  "environment": "Windows real Chrome exterior read-only probe",
+  "url": "https://134.175.136.31/api/health",
+  "certificateBypass": false,
+  "fixtureWrites": false,
+  "at": "2026-10-08T14:16:28.320Z",
+  "status": "BLOCKED",
+  "error": "page.goto: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://134.175.136.31/api/health\", waiting until \"domcontentloaded\"\u001b[22m\n"
+}

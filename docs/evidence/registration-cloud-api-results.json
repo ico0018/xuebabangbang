@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "environment": "Tencent rootless Docker; new isolated PostgreSQL databases and actual auth/API handlers",
+  "results": [
+    "false + disabled mail: auto session, unverified DB state, server-only role, normalized duplicate and DB expression uniqueness, existing secure password hashing",
+    "Unverified learning access, profile/state persistence through logout/login, multi-account read/write denial, email-change and fake verification denied, password change requires original password",
+    "Concurrent database IP and account rate limits; forwarding/IP header spoofing cannot rotate buckets",
+    "Absent config defaults true; new accounts require real email token; client exemption injection denied; prior unverified account keeps learning data; rate limit survives server restart",
+    "Mailbox reset token proves ownership, changes pre-registered password, revokes all former sessions; old/invented/replayed credentials denied",
+    "Unverified administrator cannot sign in or use admin API; true + no mail gives explicit unavailable status; existing verified account still signs in",
+    "Populated original schema upgrade preserves child state/revision/password and false verification, normalizes email, grants ordinary compatibility; migration rerun is safe and legacy password works with true + disabled mail"
+  ]
+}

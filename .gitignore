@@ -5,3 +5,6 @@ out/
 .env*
 !.env.example
 tsconfig.tsbuildinfo
+.dev-mail/
+mail-outbox/
+.test-runtime/

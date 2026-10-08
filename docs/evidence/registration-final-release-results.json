@@ -1,0 +1,16 @@
+{
+  "repo": "portal",
+  "commit": "0c66b0a706e4ff9dd23b8f7e847db1ef6671e694",
+  "sha256": "28c57f0f7a1dc808838cc5958f6fe8e75cfde748ae3a7f8eb329242f34ce4d54",
+  "status": "PASS",
+  "image": "sha256:8f815d691f856b08e7082688a300331c736c685274ad1b92807e5f3012bd1aa2",
+  "databaseBeforeAfterSHA256": "67bfa62014ee7d85ed9ef4114a1a5ea1d5a71aa749a460752f3b1d8809f571a4",
+  "originalPreviewDataPreserved": true,
+  "productionUnchanged": true,
+  "productionSHA256": "05c355b6bf439819fc155d2508da24451bd96ddb1f8a7f4d18f2b074c4de84c5",
+  "verificationRequired": false,
+  "mailProvider": "disabled",
+  "rootless": true,
+  "backupUser": "ubuntu",
+  "publicPortsAdded": false
+}

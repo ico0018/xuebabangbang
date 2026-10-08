@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "environment": "Tencent Guangzhou isolated preview",
+  "database": "PostgreSQL17",
+  "restart": {
+    "allPublicTables": 11,
+    "rowCountsAndSortedRowHashesEqual": true
+  },
+  "restore": {
+    "newDatabase": "restore_drill_20261008030210_12297",
+    "allPublicTables": 11,
+    "rowCountsAndSortedRowHashesEqual": true
+  },
+  "backup": {
+    "file": "preview-20261008T030210Z-26306.dump",
+    "sha256": "9f985af23444e771a353671e397ac170072ff5a03758fd9f9842e034fbdac7a6",
+    "serverMode": "0600",
+    "directoryMode": "0700",
+    "localDownloadHashMatched": true
+  },
+  "timer": {
+    "unit": "xueba-preview-backup.timer",
+    "user": "ubuntu",
+    "target": "local",
+    "enabled": true,
+    "lastManualRun": "success/exit0",
+    "nextRun": "2026-10-09 03:34:10 Asia/Shanghai",
+    "randomizedDelaySeconds": 300
+  },
+  "secrets": {
+    "envMode": "0600",
+    "mailboxDirectoryMode": "0700",
+    "mailFileMode": "0600"
+  },
+  "server": {
+    "appHealth": "healthy",
+    "dbHealth": "healthy",
+    "appMemory": "81.75 MiB /768 MiB",
+    "dbMemory": "74.39 MiB /512 MiB",
+    "availableMemory": "2.6 GiB",
+    "databaseHostPortPublished": false,
+    "previewPorts": "loopback only"
+  },
+  "production": {
+    "originalServices": "active",
+    "homepageHashUnchanged": true,
+    "dnsChanged": false,
+    "mainMerged": false
+  },
+  "external": {
+    "cos": "NOT CONFIGURED: COS_BUCKET is not configured; test exit1",
+    "smtp": "NOT CONFIGURED: private development outbox only",
+    "deployedDomainHttps": "NOT SWITCHED",
+    "icpAndTencentAccessFiling": "NOT VERIFIED"
+  }
+}

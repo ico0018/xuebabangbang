@@ -1,0 +1,13 @@
+[Unit]
+Description=Renew public-IP preview TLS twice daily in Asia/Shanghai
+
+[Timer]
+OnCalendar=*-*-* 03:12:00 Asia/Shanghai
+OnCalendar=*-*-* 15:12:00 Asia/Shanghai
+Persistent=true
+RandomizedDelaySec=10min
+AccuracySec=1s
+Unit=xueba-preview-ip-tls.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "environment": "Tencent SSH preview",
+  "results": [
+    "Email verification, wrong password, HttpOnly SameSite cookie and server-only administrator role",
+    "Other account cannot read/write child data; CORS rejects untrusted Origin; revision conflict retains cloud data; invalid payload rejected",
+    "Real reset token changes password and revokes old session; old password fails; sign-out invalidates session"
+  ]
+}
