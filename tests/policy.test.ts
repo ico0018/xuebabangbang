@@ -103,3 +103,11 @@ test("remote auth enforces HTTPS and scoped cookie domain", () => {
     "https://api.xuebabangbang.cn",
   );
 });
+
+test("public IP authentication accepts HTTPS with host-only cookies and rejects insecure or domain cookies", () => {
+  const ip = "134.175.136.31";
+  assert.equal(validateAuthUrl("https://" + ip), "https://" + ip);
+  assert.throws(() => validateAuthUrl("http://" + ip));
+  assert.throws(() => validateAuthUrl("https://" + ip, ip));
+  assert.throws(() => validateAuthUrl("https://" + ip, "xuebabangbang.cn"));
+});

@@ -19,9 +19,9 @@ services:
     build:
       context: .
       args:
-        NEXT_PUBLIC_HANZI_URL: http://localhost:8321/
-        NEXT_PUBLIC_GUWEN_URL: http://localhost:8322/
-        NEXT_PUBLIC_TASKHELPER_URL: http://localhost:8323/
+        NEXT_PUBLIC_HANZI_URL: ${NEXT_PUBLIC_HANZI_URL:-http://localhost:8321/}
+        NEXT_PUBLIC_GUWEN_URL: ${NEXT_PUBLIC_GUWEN_URL:-http://localhost:8322/}
+        NEXT_PUBLIC_TASKHELPER_URL: ${NEXT_PUBLIC_TASKHELPER_URL:-http://localhost:8323/}
     restart: unless-stopped
     env_file: .env.preview
     environment:

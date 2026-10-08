@@ -35,3 +35,22 @@ test("return navigation only permits portal and configured learning origins", ()
     "http://localhost:8321/practice.html",
   );
 });
+
+test("public IP tool return routes preserve their prefix and reject outside origins", () => {
+  const origin = "https://134.175.136.31",
+    tools = [origin + "/hanzi/", origin + "/guwen/", origin + "/taskhelper/"];
+  for (const route of [
+    "/hanzi/welcome.html",
+    "/guwen/parent.html?embedded=1",
+    "/taskhelper/parent/",
+  ])
+    assert.equal(safeReturnTo(origin + route, origin, tools), origin + route);
+  assert.equal(
+    safeReturnTo("http://134.175.136.31/hanzi/", origin, tools),
+    origin + "/account",
+  );
+  assert.equal(
+    safeReturnTo("https://evil.example/hanzi/", origin, tools),
+    origin + "/account",
+  );
+});
