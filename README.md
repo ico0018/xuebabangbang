@@ -2,7 +2,7 @@
 
 给孩子和家长准备的实用学习小工具。
 
-门户首页提供三个工具的使用步骤和入口：[古文乐园](https://guwen.xuebabangbang.cn/)、[汉字乐园](https://hanzi.xuebabangbang.cn/)、[任务小帮手](https://taskhelper.xuebabangbang.cn/)。工具继续运行在各自原有站点，门户不处理工具数据。
+门户首页提供四个工具的使用步骤和入口：古文乐园、汉字乐园、作文帮帮、任务小帮手。作文入口为同源的 `/zuowen/`，需在部署环境配置静态目录；腾讯云 IP 预览已使用这一方式。作文项目来自 https://github.com/ico0018/zuowen_bangbang ，无需构建，发布根目录 HTML/CSS/JS 和完整 vendor/。作文素材保存在当前浏览器，与账号云记录独立。其他工具保留既有地址和数据。
 
 `/about` 是独立的“为什么做”页面。`/tools` 保留原有搜索和分类入口，顶部导航的“工具”直接定位到首页工具区。
 
@@ -36,7 +36,7 @@ app/             页面与全局布局
 components/      可复用的页面组件
 data/tools.ts    统一的工具数据
 data/community.ts 首页和关于页共用的群二维码与说明
-public/illustrations/ 三张独立 SVG 小插画
+public/illustrations/ 四张独立 SVG 小插画
 ```
 
 ## 新增工具

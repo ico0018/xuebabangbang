@@ -13,7 +13,7 @@ export type Tool = {
   href?: string;
   external?: boolean;
   featured?: boolean;
-  illustration: "scroll" | "character" | "checklist";
+  illustration: "scroll" | "character" | "checklist" | "writing";
   color: "green" | "yellow" | "blue";
   steps: [string, string, string];
   action: string;
@@ -53,6 +53,22 @@ export const tools: Tool[] = [
     steps: ["选教材和课次", "看笔顺、练写字", "听写检查"],
     action: "开始学生字",
     external: true,
+    featured: true,
+  },
+  {
+    id: "composition-helper",
+    name: "作文帮帮",
+    description: "按年级和课题整理素材、理清思路，在纸上完成作文并自己检查",
+    category: "chinese",
+    categoryLabel: "语文",
+    icon: "文",
+    tags: ["作文", "三年级", "四年级", "写作"],
+    status: "online",
+    href: "/zuowen/",
+    illustration: "writing",
+    color: "yellow",
+    steps: ["选年级和课题", "整理素材和思路", "纸上写作、自己检查"],
+    action: "开始写作文",
     featured: true,
   },
   {
