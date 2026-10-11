@@ -4,7 +4,7 @@ import { ToolExplorer } from "../../components/ToolExplorer";
 
 export const metadata: Metadata = {
   title: "工具箱｜学霸帮帮",
-  description: "古文乐园、汉字乐园和任务小帮手。",
+  description: "古文乐园、汉字乐园、作文帮帮和任务小帮手。",
 };
 
 export default function ToolsPage() {
@@ -20,7 +20,7 @@ export default function ToolsPage() {
           </h1>
         </div>
         <p className="max-w-xl text-base leading-7 text-black/60">
-          现在先把古文、汉字和学习计划这三件事做好。以后真的遇到新的学习麻烦，再往这里加。
+          从古文、汉字、作文到学习计划，选一个工具，照着步骤开始。
         </p>
       </div>
 
