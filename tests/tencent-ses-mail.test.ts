@@ -74,7 +74,8 @@ test("SES messages select the correct approved template and a single recipient",
     assert.equal(message.Template?.TemplateID, id);
     assert.equal(message.TriggerType, 1);
     const data = JSON.parse(message.Template!.TemplateData);
-    assert.equal(config.origin + data.path, url);
+    assert.equal(config.origin + "/" + data.path, url);
+    assert.ok(!data.path.startsWith("/"));
     assert.ok(!JSON.stringify(message).includes("test-key"));
     assert.equal(message.Simple, undefined);
   }
@@ -91,6 +92,8 @@ test("SES rejects foreign links, userinfo, wrong auth paths and unsafe callbacks
       "/api/auth/verify-email?token=x&callbackURL=https://attacker.example/",
     env.BETTER_AUTH_URL +
       "/api/auth/verify-email?token=x&callbackURL=javascript:alert(1)",
+    env.BETTER_AUTH_URL +
+      "/api/auth/verify-email?token=x&callbackURL=//attacker.example/",
   ])
     assert.throws(() => buildSesMail(config, recipient, verify, url));
   assert.throws(() => buildSesMail(config, recipient, reset, verifyUrl));
@@ -108,6 +111,15 @@ test("SES rejects foreign links, userinfo, wrong auth paths and unsafe callbacks
       env.BETTER_AUTH_URL +
         "/api/auth/verify-email?token=x&callbackURL=" +
         encodeURIComponent("https://tool.example.test/practice"),
+    ),
+  );
+  // Better Auth also emits a root-relative default callback when omitted.
+  assert.doesNotThrow(() =>
+    buildSesMail(
+      config,
+      recipient,
+      verify,
+      env.BETTER_AUTH_URL + "/api/auth/verify-email?token=x&callbackURL=%2F",
     ),
   );
 });

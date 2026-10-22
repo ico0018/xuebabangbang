@@ -111,7 +111,7 @@ export function buildSesMail(
   if (callback) {
     let target: URL;
     try {
-      target = new URL(callback);
+      target = new URL(callback, config.origin);
     } catch {
       throw new Error("邮件返回地址无效。");
     }
@@ -131,7 +131,10 @@ export function buildSesMail(
     Unsubscribe: "0",
     Template: {
       TemplateID: verify ? config.verifyTemplate : config.resetTemplate,
-      TemplateData: JSON.stringify({ path: url.pathname + url.search }),
+      // The reviewed template owns the origin and its required first slash.
+      TemplateData: JSON.stringify({
+        path: url.pathname.slice(1) + url.search,
+      }),
     },
   };
 }
