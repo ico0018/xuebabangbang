@@ -70,7 +70,7 @@ test("challenge rejects tampering, oversized input, foreign or expired sessions 
   );
   const parts = challenge.challenge.split(".");
   const payload = JSON.parse(Buffer.from(parts[0], "base64url").toString());
-  payload.left = 9;
+  payload.left = payload.left === 9 ? 8 : 9;
   parts[0] = Buffer.from(JSON.stringify(payload)).toString("base64url");
   assert(
     !verifyParentChallenge(session, parts.join("."), correct, secret, now),

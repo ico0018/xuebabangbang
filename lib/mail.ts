@@ -1,7 +1,13 @@
 import nodemailer from "nodemailer";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import {
+  readSesMailConfig,
+  buildSesMail,
+  sendSesMail,
+} from "./tencent-ses-mail";
 export function mailReady() {
+  if (process.env.MAIL_PROVIDER === "tencent-ses") return !!readSesMailConfig();
   return process.env.MAIL_PROVIDER === "development"
     ? process.env.ENABLE_DEV_MAIL === "true"
     : process.env.MAIL_PROVIDER === "smtp" &&
@@ -9,10 +15,7 @@ export function mailReady() {
         !!process.env.MAIL_FROM;
 }
 export async function sendMail(to: string, subject: string, url: string) {
-  if (!mailReady())
-    throw new Error(
-      "邮件服务尚未配置，请设置 MAIL_PROVIDER、SMTP_HOST 和 MAIL_FROM。",
-    );
+  if (!mailReady()) throw new Error("邮件服务尚未配置。");
   const text = [
     subject,
     "",
@@ -30,6 +33,12 @@ export async function sendMail(to: string, subject: string, url: string) {
       JSON.stringify({ to, subject, text, url }, null, 2),
       { mode: 0o600 },
     );
+    return;
+  }
+  if (process.env.MAIL_PROVIDER === "tencent-ses") {
+    const config = readSesMailConfig();
+    if (!config) throw new Error("邮件服务尚未配置。");
+    await sendSesMail(config, buildSesMail(config, to, subject, url));
     return;
   }
   const transporter = nodemailer.createTransport({
