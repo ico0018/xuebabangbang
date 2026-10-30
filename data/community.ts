@@ -1,4 +1,5 @@
 type CommunityConfig = {
+  enabled: boolean;
   title: string;
   description: string;
   qr: {
@@ -15,6 +16,7 @@ type CommunityConfig = {
 };
 
 export const community: CommunityConfig = {
+  enabled: false,
   title: "有建议，来群里聊",
   description: "哪里不好用，或者想要什么小工具，都可以说。",
   qr: {

@@ -10,6 +10,8 @@ export function CommunitySection() {
   const { qr } = community;
   const qrSrc = imageFailed ? null : qr.src;
 
+  if (!community.enabled) return null;
+
   return (
     <section
       id="community"
