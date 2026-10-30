@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { community } from "../data/community";
 
 export function Header() {
   return (
@@ -31,7 +32,7 @@ export function Header() {
           <Link href="/#tools">工具</Link>
           <Link href="/about">为什么做</Link>
           <Link href="/account">我的账号</Link>
-          <Link href="/#community">进群提建议</Link>
+          {community.enabled && <Link href="/#community">进群提建议</Link>}
         </nav>
       </div>
     </header>
